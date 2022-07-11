@@ -1,0 +1,26 @@
+{% extends "Books/layout.html" %}
+
+{% block body %}
+
+    {% if message %}
+        <div>{{ message }}</div>
+    {% endif %}
+
+    <form action="{% url 'login' %}" method="post" style="margin-top: 50px;">
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+            <input type="email" class="form-control field" id="email" placeholder="name@example.com">
+            <label for="floatingInput" class="field">Email address</label>
+        </div>
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control field" id="password" placeholder="Password">
+            <label for="floatingPassword" class="field">Password</label>
+        </div>
+        <div class="register-button">
+        <input class="btn btn-primary btn-2 " type="submit" value="Login">
+        <a href="{% url 'register' %}" class="btn btn-primary btn-2" type="button">Register</a>
+        </div>
+    </form>
+
+
+{% endblock %}

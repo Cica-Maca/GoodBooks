@@ -1,0 +1,58 @@
+{% extends "Books/layout.html" %}
+{% load static %}
+
+
+
+
+{% block body %}
+
+<div class="genre-name">
+  Top books this week:
+</div>
+<div>
+  {% if message %} <h6 style="color: #cc0000;"> {{ message }}</h6> {% endif %}
+</div>
+
+<ul class="index-genre" id="top-books-week">
+  <div class="arrow-right">
+    <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
+  </div>
+  <div class="arrow">
+    <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
+  </div>
+  {% for book in top_books %}
+  <div class="inner-genre">
+    <a href="{% url 'book_page' book.isbn %}" class="link-book" id="{{ book.isbn }}"><li class="list-book"><img class="book-img" src="{{ book.image }}"><div class="book-name">{{ book.title }}</div></li></a>
+    <div class="info-card">
+      <h6 class="info-card-title">
+        {{ book.title }}
+      </h6>
+      <div class="info-card-author">
+        by <h6 style="margin-left: 3px">{{ book.author }}</h6>
+      </div>
+      <div class="info-card-desc">{{ book.desc }}</div>
+      </div>
+    </div>
+  {% endfor %}
+</ul>
+
+{% for genre in genres %}
+<div class="genre-name">
+  {{ genre }}
+</div>
+  <ul class="index-genre" id="{{ genre }}">
+    <div class="arrow-right">
+      <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
+    </div>
+    <div class="arrow">
+      <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
+    </div>
+  </ul>
+{% endfor %}
+
+
+
+<script src="{% static 'javascript.js' %}"></script>
+
+
+{% endblock %}
