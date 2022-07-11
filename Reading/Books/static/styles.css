@@ -332,3 +332,13 @@
     font-size: 1.4em;
     font-weight: bold;
 }
+
+.rating {
+    font-family: "Merriweather", "Georgia", serif;
+    line-height: 21px;
+}
+
+.pages {
+    font-family: "Merriweather", "Georgia", serif;
+    line-height: 21px;
+}
