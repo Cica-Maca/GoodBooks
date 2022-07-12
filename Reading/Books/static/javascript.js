@@ -273,7 +273,9 @@ function moveArrow()
     })
 }
 
-function displayQuotes(quote)
-{
-  
+function displayQuotes(quote){
+  var contentQuote = document.createElement('div')
+  var divQuote = document.createElement('div')
+  var quoteText = document.createElement('p')
+  var quoteAuthor = document.createElement('p')
 }
