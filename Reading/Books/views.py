@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from logging import exception
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, resolve_url
 from django.http import HttpResponse
 from django.db import IntegrityError
 from .models import User
@@ -100,7 +100,11 @@ def quotes(request):
     return render(request, "books/quotes.html")
 
 def BookToLink(request, title):
-    return HttpResponseRedirect(reverse('index'))
+    url = f"https://www.googleapis.com/books/v1/volumes?q={title}&printType=books"
+    book_data = requests.get(url=url).json()
+    isbn = book_data["items"][0]["volumeInfo"]["industryIdentifiers"][0]["identifier"]
+    print(isbn)
+    return HttpResponseRedirect(resolve_url('book_page', isbn))
 
 def top_books():
     url = "https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=dJm5Qeq1IAZgEJ7j6YmBAPLWA23SrzdP"
