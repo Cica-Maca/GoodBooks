@@ -284,8 +284,17 @@ function displayQuotes(quote){
   quoteText.className = "quote-text"
   quoteAuthor.className = "quote-author"
 
-  quoteText.textContent = quote.quote
-  quoteAuthor.textContent = quote.author
+
+  if(quote.publication){
+    quoteAuthor.textContent = `--${quote.author} ${quote.publication}`
+  }
+  else {
+    quoteAuthor.textContent = `--${quote.author}`
+  }
+  
+
+  quoteText.textContent = `"${quote.quote}"`
+  
 
   divQuote.append(quoteText, quoteAuthor)
   contentQuote.append(divQuote)
