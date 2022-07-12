@@ -278,6 +278,7 @@ function displayQuotes(quote){
   var divQuote = document.createElement('div')
   var quoteText = document.createElement('p')
   var quoteAuthor = document.createElement('p')
+  var publication = document.createElement('a')
 
   contentQuote.className = "content-quote"
   divQuote.className = "quote"
@@ -286,7 +287,10 @@ function displayQuotes(quote){
 
 
   if(quote.publication){
-    quoteAuthor.textContent = `--${quote.author} ${quote.publication}`
+    publication.textContent = quote.publication
+    publication.href = `/Books/toisbn/${quote.publication}`
+    quoteAuthor.textContent = `--${quote.author}`
+    quoteAuthor.append(publication)
   }
   else {
     quoteAuthor.textContent = `--${quote.author}`
