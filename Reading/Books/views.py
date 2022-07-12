@@ -84,6 +84,7 @@ def book_page(request, isbn):
         book["more"] = "True"
     except:
         book["author"] = book_data["items"][0]["volumeInfo"]["authors"][0]
+
     book["date"] = book_data["items"][0]["volumeInfo"]["publishedDate"]
     book["desc"] = book_data["items"][0]["volumeInfo"]["description"]
     book["page_count"] = book_data["items"][0]["volumeInfo"]["pageCount"]
@@ -103,7 +104,6 @@ def BookToLink(request, title):
     url = f"https://www.googleapis.com/books/v1/volumes?q={title}&printType=books"
     book_data = requests.get(url=url).json()
     isbn = book_data["items"][0]["volumeInfo"]["industryIdentifiers"][0]["identifier"]
-    print(isbn)
     return HttpResponseRedirect(resolve_url('book_page', isbn))
 
 def top_books():
