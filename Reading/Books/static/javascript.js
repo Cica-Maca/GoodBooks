@@ -202,7 +202,14 @@ function bookList(items, genre, title){
     info_card_title.textContent = item.volumeInfo.title
 
     info_card_author.className = "info-card-author"
-    info_card_author.innerHTML = `by <h6 style="margin-left:3px;">${item.volumeInfo.authors[0]} ${item.volumeInfo.authors[1] || ""}</h6>`
+    if(item.volumeInfo.authors[1])
+    {
+      info_card_author.innerHTML = `by <h6 style="margin-left:3px;">${item.volumeInfo.authors[0]}, ${item.volumeInfo.authors[1]}</h6>`
+    }
+    else {
+      info_card_author.innerHTML = `by <h6 style="margin-left:3px;">${item.volumeInfo.authors[0]}</h6>`
+    }
+
     
     info_card_desc.className = "info-card-desc"
     info_card_desc.textContent = item.volumeInfo.description
