@@ -369,4 +369,6 @@
 .quote-author {
     color: white;
     float: right;
+    align-self: flex-end;
+    margin-right: 7.5%;
 }
