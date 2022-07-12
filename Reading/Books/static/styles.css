@@ -342,3 +342,31 @@
     font-family: "Merriweather", "Georgia", serif;
     line-height: 21px;
 }
+
+
+.content-quote {
+    display: flex;
+    justify-content: center;
+}
+
+.quote {
+    width: 80%;
+    background-color: #382110;
+    border-radius: 50px;
+    display: flex;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+}
+
+.quote-text {
+    color: white;
+    width: 85%;
+}
+
+.quote-author {
+    color: white;
+    float: right;
+}
