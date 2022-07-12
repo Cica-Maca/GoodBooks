@@ -278,4 +278,16 @@ function displayQuotes(quote){
   var divQuote = document.createElement('div')
   var quoteText = document.createElement('p')
   var quoteAuthor = document.createElement('p')
+
+  contentQuote.className = "content-quote"
+  divQuote.className = "quote"
+  quoteText.className = "quote-text"
+  quoteAuthor.className = "quote-author"
+
+  quoteText.textContent = quote.quote
+  quoteAuthor.textContent = quote.author
+
+  divQuote.append(quoteText, quoteAuthor)
+  contentQuote.append(divQuote)
+  document.querySelector('.body').append(contentQuote)
 }
