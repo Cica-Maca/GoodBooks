@@ -109,7 +109,31 @@ if (author_name.length !== 0){
   window.addEventListener('load', moveArrow)
 }
 
-  
+if (document.URL.includes("quotes")){
+  fetch('https://goodquotesapi.herokuapp.com/tag/popular').then(response => {
+    return response.json()
+  }).then(quotes => {
+    quotes.quotes.forEach(quote => {
+      displayQuotes(quote)
+    })
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  
 
 // Fetches books by author and displays them in a list on book page
@@ -247,4 +271,9 @@ function moveArrow()
         arrow.setAttribute('style', `left:${rect.right-27}px`)
       })
     })
+}
+
+function displayQuotes(quote)
+{
+  
 }
