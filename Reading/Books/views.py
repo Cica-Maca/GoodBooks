@@ -96,10 +96,8 @@ def book_page(request, isbn):
         "book" : book
     })
 
-
-
-
-
+def quotes(request):
+    return render(request, "books/quotes.html")
 
 def top_books():
     url = "https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=dJm5Qeq1IAZgEJ7j6YmBAPLWA23SrzdP"
