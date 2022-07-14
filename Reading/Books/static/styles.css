@@ -273,6 +273,7 @@
 
 .content-info {
     width: 700px;
+    min-height: 400px;
 }
 
 .content-info-desc-hide {
@@ -375,4 +376,22 @@
     float: right;
     align-self: flex-end;
     margin-right: 7.5%;
+}
+
+.me {
+    margin-top: 20px;
+    display: flex;
+}
+
+.me2 {
+    width: 140px;
+    background-color: #382110 !important;
+}
+
+.me2:hover {
+    background-color: black;
+}
+
+.me2:focus {
+    background-color: black !important;
 }

@@ -6,7 +6,20 @@
 <div class="content">
     <div class="content-wrap">
     <div class="content-book">
-        <img src="{{ book.image }}" class="content-image">
+        <div class="content-book-image">
+            <img src="{{ book.image }}" class="content-image">
+            <div class="btn-group me">
+                <button class="btn btn-success btn-md" type="button">
+                  Want to read
+                </button>
+                <button type="button" class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="sr-only"></span>
+                </button>
+                <div class="dropdown-menu">
+                  ...
+                </div>
+              </div>
+        </div>
         <div class="content-info">
             <h4 id="content-book-title">{{book.title}}</h4>
             <h6 id="content-book-author">by {% if book.more %} {{ book.author.0 }}, {{ book.author.1 }} {% else %} {{ book.author }} {% endif %}</h6>
