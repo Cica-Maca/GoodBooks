@@ -10,14 +10,14 @@
             <img src="{{ book.image }}" class="content-image">
             <div class="btn-group me">
                 {% if info_book %}
-                    <button class="btn btn-success btn-md" type="button">
+                    <button class="btn btn-success btn-md" type="button" id="book-state">
                     {{ info_book }}
                     </button>
                     <button type="button" class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only"></span>
                     </button>
                 {% else %}
-                <button class="btn btn-secondary btn-md" type="button">
+                <button class="btn btn-secondary btn-md" type="button" id="book-state">
                     Book State
                     </button>
                     <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

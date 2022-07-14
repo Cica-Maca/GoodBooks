@@ -137,7 +137,9 @@ if(document.URL.includes("show"))
         headers: { "X-CSRFToken": csrftoken },
       }).then(response => response)
       .then(result => {
-        console.log(result)
+        if(result.status === 201 || result.status === 200){
+          changeState(event.target.textContent)
+        }
       })
     })
   }) 
@@ -353,4 +355,18 @@ function getCookie(name) {
       }
   }
   return cookieValue;
+}
+
+function changeState(state){
+  let stateButton = document.querySelector('#book-state')
+  if (state !== "Remove"){
+    stateButton.innerHTML = state;
+    stateButton.className = "btn btn-success btn-md"
+    stateButton.nextElementSibling.className = "btn btn-sm btn-success dropdown-toggle dropdown-toggle-split"
+  }
+  else {
+    stateButton.innerHTML = "Book state"
+    stateButton.className = "btn btn-secondary btn-md"
+    stateButton.nextElementSibling.className = "btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
+  }
 }

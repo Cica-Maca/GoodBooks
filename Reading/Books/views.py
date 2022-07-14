@@ -85,9 +85,9 @@ def book_page(request, isbn):
             if users_book.is_read:
                 info_book_bool = "Read"
             elif users_book.to_read:
-                info_book_bool = "To read"
+                info_book_bool = "Want to read"
             elif user_book.is_reading:
-                info_book_bool = "Is reading"
+                info_book_bool = "Currently reading"
         except:
             pass   
     url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
