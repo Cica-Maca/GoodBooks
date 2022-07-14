@@ -122,12 +122,21 @@ def BookToLink(request, title):
     isbn = book_data["items"][0]["volumeInfo"]["industryIdentifiers"][0]["identifier"]
     return HttpResponseRedirect(resolve_url('book_page', isbn))
 
-@csrf_exempt
 def BookState(request):
     if request.method != "PUT":
         return HttpResponseRedirect(resolve_url('index'))
     data = json.loads(request.body)
-    user_book(user_id=request.user, book_isbn=data['isbn'], is_read=True).save()
+    try:
+        user_book_exists = user_book.objects.get(user_id=request.user, book_isbn=data['isbn'])
+        user_book_exists.delete()
+    except:
+        pass
+    if data['bookState'] == "Read":
+        user_book(user_id=request.user, book_isbn=data['isbn'], is_read=True, to_read=False, is_reading=False).save()
+    elif data['bookState'] == "Want to read":
+        user_book(user_id=request.user, book_isbn=data['isbn'], to_read=True, is_read=False, is_reading=False).save()
+    elif data['bookState'] == "Currently reading":
+        user_book(user_id=request.user, book_isbn=data['isbn'], is_reading=True, is_read=False, to_read=False).save()
     return JsonResponse({"message": "Radi"}, status=201)
 
 def top_books():

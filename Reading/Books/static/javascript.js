@@ -123,16 +123,18 @@ if (document.URL.includes("quotes")){
 
 if(document.URL.includes("show"))
 {
-  var isbn = JSON.parse(document.getElementById('user_id').textContent)
+  let user = JSON.parse(document.getElementById('user_id').textContent)
+  let csrftoken = getCookie('csrftoken');
   document.querySelectorAll('.dropdown-item').forEach(state => {
     state.addEventListener('click', event => {
       fetch(`/Books/state`, {
         method: 'PUT',
         body: JSON.stringify({
           "bookState": event.target.textContent,
-          "isbn": window.location.href.split('/')[5],
-          "user": isbn
-        })
+          "isbn": window.location.href.split('/')[5].replace('#', ''),
+          "user": user
+        }),
+        headers: { "X-CSRFToken": csrftoken },
       }).then(response => response)
       .then(result => {
         console.log(result)
@@ -335,4 +337,20 @@ function displayQuotes(quote){
   divQuote.append(quoteText, quoteAuthor)
   contentQuote.append(divQuote)
   document.querySelector('.body').append(contentQuote)
+}
+
+function getCookie(name) {
+  var cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+      var cookies = document.cookie.split(';');
+      for (var i = 0; i < cookies.length; i++) {
+          var cookie = cookies[i].trim();
+          // Does this cookie string begin with the name we want?
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+          }
+      }
+  }
+  return cookieValue;
 }
