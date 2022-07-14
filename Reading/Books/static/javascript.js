@@ -150,6 +150,11 @@ function authorBooks(authors, title){
            document.querySelector('.index-genre').remove()
            document.querySelector('.author-name').remove()
         }
+        if (!(document.querySelector('.index-genre').hasChildNodes())){
+          document.querySelector('.index-genre').remove()
+          document.querySelector('.author-name').remove()
+        }
+
       }
     )
   })
