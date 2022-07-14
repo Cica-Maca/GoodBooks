@@ -6,7 +6,7 @@ from logging import exception
 from django.shortcuts import redirect, render, resolve_url
 from django.http import HttpResponse
 from django.db import IntegrityError
-from .models import User
+from .models import User, user_book
 import requests
 import json
 
@@ -75,6 +75,19 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('index'))
 
 def book_page(request, isbn):
+    if request.user.is_authenticated:
+        user = request.user
+        info_book_bool = None
+        try:
+            users_book = user_book.objects.get(user_id=user, book_isbn=isbn)
+            if users_book.is_read:
+                info_book_bool = "Read"
+            elif users_book.to_read:
+                info_book_bool = "To read"
+            elif user_book.is_reading:
+                info_book_bool = "Is reading"
+        except:
+            pass   
     url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
     book_data = requests.get(url=url).json()
     book = {}
@@ -94,7 +107,8 @@ def book_page(request, isbn):
         book["rating"] = '0'
     book["image"] = book_data["items"][0]["volumeInfo"]["imageLinks"]["thumbnail"]
     return render(request, "books/book_page.html", {
-        "book" : book
+        "book" : book,
+        "info_book": info_book_bool
     })
 
 def quotes(request):

@@ -8,7 +8,7 @@ class User(AbstractUser):
 
 class user_book(models.Model):
     user_id = models.ForeignKey(User, related_name="user", on_delete=models.CASCADE)
-    book_isbn = models.IntegerField()
+    book_isbn = models.TextField()
     to_read = models.BooleanField(default=False)
     is_read = models.BooleanField(default=False)
     is_reading = models.BooleanField(default=False)

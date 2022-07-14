@@ -9,15 +9,25 @@
         <div class="content-book-image">
             <img src="{{ book.image }}" class="content-image">
             <div class="btn-group me">
-                <button class="btn btn-success btn-md" type="button">
-                  Want to read
-                </button>
-                <button type="button" class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <span class="sr-only"></span>
-                </button>
+                {% if info_book %}
+                    <button class="btn btn-success btn-md" type="button">
+                    {{ info_book }}
+                    </button>
+                    <button type="button" class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only"></span>
+                    </button>
+                {% else %}
+                <button class="btn btn-secondary btn-md" type="button">
+                    Book State
+                    </button>
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only"></span>
+                    </button>
+                {% endif %}
                 <div class="dropdown-menu position-drop">
                     <a class="dropdown-item" href="#">Read</a>
                     <a class="dropdown-item" href="#">Currently reading</a>
+                    <a class="dropdown-item" href="#">Want to read</a>
                 </div>
               </div>
         </div>
