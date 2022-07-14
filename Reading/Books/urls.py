@@ -9,5 +9,6 @@ urlpatterns = [
     path("logout", views.logout_view, name="logout"),
     path("show/<str:isbn>", views.book_page, name="book_page"),
     path("quotes", views.quotes, name="quotes"),
-    path("toisbn/<str:title>", views.BookToLink, name="toisbn")
+    path("toisbn/<str:title>", views.BookToLink, name="toisbn"),
+    path("state", views.BookState, name="bookstate")
 ]

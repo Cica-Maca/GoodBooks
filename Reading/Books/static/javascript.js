@@ -121,6 +121,28 @@ if (document.URL.includes("quotes")){
 
 
 
+if(document.URL.includes("show"))
+{
+  var isbn = JSON.parse(document.getElementById('user_id').textContent)
+  document.querySelectorAll('.dropdown-item').forEach(state => {
+    state.addEventListener('click', event => {
+      fetch(`/Books/state`, {
+        method: 'PUT',
+        body: JSON.stringify({
+          "bookState": event.target.textContent,
+          "isbn": window.location.href.split('/')[5],
+          "user": isbn
+        })
+      }).then(response => response)
+      .then(result => {
+        console.log(result)
+      })
+    })
+  }) 
+}
+
+
+
 
 
 

@@ -1,4 +1,5 @@
 from cmath import e
+from pydoc import resolve
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
@@ -6,6 +7,7 @@ from logging import exception
 from django.shortcuts import redirect, render, resolve_url
 from django.http import HttpResponse
 from django.db import IntegrityError
+from django.views.decorators.csrf import csrf_exempt
 from .models import User, user_book
 import requests
 import json
@@ -119,6 +121,14 @@ def BookToLink(request, title):
     book_data = requests.get(url=url).json()
     isbn = book_data["items"][0]["volumeInfo"]["industryIdentifiers"][0]["identifier"]
     return HttpResponseRedirect(resolve_url('book_page', isbn))
+
+@csrf_exempt
+def BookState(request):
+    if request.method != "PUT":
+        return HttpResponseRedirect(resolve_url('index'))
+    data = json.loads(request.body)
+    user_book(user_id=request.user, book_isbn=data['isbn'], is_read=True).save()
+    return JsonResponse({"message": "Radi"}, status=201)
 
 def top_books():
     url = "https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=dJm5Qeq1IAZgEJ7j6YmBAPLWA23SrzdP"

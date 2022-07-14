@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-
+{{ request.user.id|json_script:"user_id" }}
 <div class="content">
     <div class="content-wrap">
     <div class="content-book">
