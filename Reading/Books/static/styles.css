@@ -321,12 +321,12 @@
 .author-name {
     padding-top: 50px;
     padding-bottom: 10px;
-    width: 857px;
-    margin: 0px auto;
     font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 17px;
     font-weight: bold;
     text-transform: uppercase;
+    display: flex;
+    justify-content: center;
 }
 
 .author-name-nm {
