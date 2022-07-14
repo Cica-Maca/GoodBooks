@@ -144,7 +144,12 @@ function authorBooks(authors, title){
     return response.json()
   })
     .then(items => {
+        if (items.totalItems !== 0)
           bookList(items, document.querySelectorAll('.index-genre')[i], title);
+        else {
+           document.querySelector('.index-genre').remove()
+           document.querySelector('.author-name').remove()
+        }
       }
     )
   })
