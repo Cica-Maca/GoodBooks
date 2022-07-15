@@ -126,17 +126,17 @@ def BookState(request):
     if request.method != "PUT":
         return HttpResponseRedirect(resolve_url('index'))
     data = json.loads(request.body)
-    try:
-        user_book_exists = user_book.objects.get(user_id=request.user, book_isbn=data['isbn'])
-        user_book_exists.delete()
-    except:
-        pass
     if data['bookState'] == "Read":
-        user_book(user_id=request.user, book_isbn=data['isbn'], is_read=True, to_read=False, is_reading=False).save()
+        # user_book(user_id=request.user, book_isbn=data['isbn'], is_read=True, to_read=False, is_reading=False).save()ž
+        user_book.objects.update_or_create(user_id=request.user, book_isbn=data['isbn'], defaults={'is_read':True, 'to_read':False, 'is_reading':False})
     elif data['bookState'] == "Want to read":
-        user_book(user_id=request.user, book_isbn=data['isbn'], to_read=True, is_read=False, is_reading=False).save()
+        user_book.objects.update_or_create(user_id=request.user, book_isbn=data['isbn'], defaults={'is_read':False, 'to_read':True, 'is_reading':False})
+        # user_book(user_id=request.user, book_isbn=data['isbn'], to_read=True, is_read=False, is_reading=False).save()
     elif data['bookState'] == "Currently reading":
-        user_book(user_id=request.user, book_isbn=data['isbn'], is_reading=True, is_read=False, to_read=False).save()
+        user_book.objects.update_or_create(user_id=request.user, book_isbn=data['isbn'], defaults={'is_read':False, 'to_read':False, 'is_reading':True})
+        # user_book(user_id=request.user, book_isbn=data['isbn'], is_reading=True, is_read=False, to_read=False).save()
+    elif data['bookState'] == "Remove":
+        user_book.objects.get(user_id=request.user, book_isbn=data['isbn']).delete()
     return JsonResponse({"message": "Success"}, status=201)
 
 def top_books():
