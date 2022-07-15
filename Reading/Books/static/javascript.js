@@ -68,9 +68,6 @@ else {
     arrow.remove()
   })
 }
-var genre_inner
-var fantasy_books
-
 
 // Getting all divs with index-genre class and fetching books for every genre in divs by calling bookList() for every genre.
 document.querySelectorAll('.index-genre').forEach(genre =>{
@@ -86,8 +83,8 @@ document.querySelectorAll('.index-genre').forEach(genre =>{
   })
   
 // Checking if there is show more div and if true call showMore()
-var show_desc = document.querySelector('#show-more-desc')
-if (show_desc != null){
+if (document.querySelector('#show-more-desc') != null){
+  let show_desc = document.querySelector('#show-more-desc')
   if (show_desc.previousElementSibling.innerHTML.length < 300){
     show_desc.remove()
   }else {
@@ -98,12 +95,10 @@ if (show_desc != null){
   }
 }
 
-var indexGenrePosition;
-var author_name = document.querySelectorAll('.content-book-hidden')
-
 // Checking if the user is on book_page and if true call authorBooks()
-if (author_name.length !== 0){
-  var book_title = document.querySelector('#content-book-title').innerHTML
+if (document.querySelectorAll('.content-book-hidden').length !== 0){
+  let author_name = document.querySelectorAll('.content-book-hidden')
+  let book_title = document.querySelector('#content-book-title').innerHTML
   authorBooks(author_name, book_title)
   window.addEventListener('resize', moveArrow)
   window.addEventListener('load', moveArrow)
@@ -232,7 +227,7 @@ function bookList(items, genre, title){
   items.items.every(item => {
     if (i > 30) return false
     try {
-    genre_inner = document.createElement("div");
+    var genre_inner = document.createElement("div");
     var genre_inner_link = document.createElement("a")
     var link_list_book = document.createElement("li")
     var book_img = document.createElement("img")

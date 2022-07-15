@@ -10,17 +10,17 @@
             <img src="{{ book.image }}" class="content-image">
             <div class="btn-group me">
                 {% if info_book and user.is_authenticated %}
-                    <button class="btn btn-success btn-md" type="button" id="book-state">
+                    <button class="btn btn-success btn-md" type="button" style="max-width: 102px;" id="book-state">
                     {{ info_book }}
                     </button>
-                    <button type="button" class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split" style="max-width: 27px;min-width: 27px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only"></span>
                     </button>
                 {% elif user.is_authenticated %}
                 <button class="btn btn-secondary btn-md" type="button" id="book-state">
                     Book State
                     </button>
-                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split" style="max-width: 27px;min-width: 27px;" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only"></span>
                     </button>
                 {% endif %}
