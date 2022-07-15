@@ -138,6 +138,7 @@ if(document.URL.includes("show"))
       }).then(response => response)
       .then(result => {
         if(result.status === 201 || result.status === 200){
+          console.log(event.target.textContent)
           changeState(event.target.textContent)
         }
       })
@@ -363,10 +364,14 @@ function changeState(state){
     stateButton.innerHTML = state;
     stateButton.className = "btn btn-success btn-md"
     stateButton.nextElementSibling.className = "btn btn-sm btn-success dropdown-toggle dropdown-toggle-split"
+    if (document.querySelector('#remove-item').style.display === 'none'){
+      document.querySelector('#remove-item').style.display = 'block'
+    }
   }
   else {
-    stateButton.innerHTML = "Book state"
+    stateButton.innerHTML = "Book State"
     stateButton.className = "btn btn-secondary btn-md"
     stateButton.nextElementSibling.className = "btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
+    document.querySelector('#remove-item').style.display = 'none'
   }
 }

@@ -77,9 +77,9 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('index'))
 
 def book_page(request, isbn):
+    info_book_bool = False
     if request.user.is_authenticated:
         user = request.user
-        info_book_bool = None
         try:
             users_book = user_book.objects.get(user_id=user, book_isbn=isbn)
             if users_book.is_read:
@@ -137,7 +137,7 @@ def BookState(request):
         user_book(user_id=request.user, book_isbn=data['isbn'], to_read=True, is_read=False, is_reading=False).save()
     elif data['bookState'] == "Currently reading":
         user_book(user_id=request.user, book_isbn=data['isbn'], is_reading=True, is_read=False, to_read=False).save()
-    return JsonResponse({"message": "Radi"}, status=201)
+    return JsonResponse({"message": "Success"}, status=201)
 
 def top_books():
     url = "https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=dJm5Qeq1IAZgEJ7j6YmBAPLWA23SrzdP"

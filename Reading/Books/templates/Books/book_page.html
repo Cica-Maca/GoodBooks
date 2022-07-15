@@ -9,14 +9,14 @@
         <div class="content-book-image">
             <img src="{{ book.image }}" class="content-image">
             <div class="btn-group me">
-                {% if info_book %}
+                {% if info_book and user.is_authenticated %}
                     <button class="btn btn-success btn-md" type="button" id="book-state">
                     {{ info_book }}
                     </button>
                     <button type="button" class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <span class="sr-only"></span>
                     </button>
-                {% else %}
+                {% elif user.is_authenticated %}
                 <button class="btn btn-secondary btn-md" type="button" id="book-state">
                     Book State
                     </button>
@@ -28,8 +28,10 @@
                     <a class="dropdown-item" href="#">Read</a>
                     <a class="dropdown-item" href="#">Currently reading</a>
                     <a class="dropdown-item" href="#">Want to read</a>
-                    {% if info_book %}
-                    <a class="dropdown-item" href="#">Remove</a>
+                    {% if not info_book %}
+                    <a class="dropdown-item" href="#" id="remove-item" style="display:none">Remove</a>
+                    {% else %}
+                    <a class="dropdown-item" href="#" id="remove-item">Remove</a>
                     {% endif %}
                 </div>
               </div>
