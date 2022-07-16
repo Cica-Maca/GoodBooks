@@ -424,3 +424,13 @@
     justify-content: center;
     margin-bottom: 50px;
 }
+
+.page {
+    font-size: 22px;
+    margin-right: 10px;
+}
+
+.page-max {
+    font-size: 22px;
+    margin-left: 10px;
+}

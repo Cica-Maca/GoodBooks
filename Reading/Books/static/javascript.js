@@ -111,44 +111,13 @@ if (document.URL.includes("quotes")){
     quotes.quotes.forEach(quote => {
       displayQuotes(quote)
     })
-  })
-  document.querySelectorAll('.dropdown-item').forEach(tags => {
-    tags.addEventListener('click', tag => {
-      tag = tag.target
-      document.querySelectorAll('.content-quote').forEach(quote => {
-        quote.remove()
-      })
-      fetch(`https://goodquotesapi.herokuapp.com/tag/${tag.textContent}`).then(response => {
-        return response.json()
-      }).then(quotes => {
-        quotes.quotes.forEach(quote => {
-          displayQuotes(quote)
-          })
-        })
-
-      document.querySelector('.drp-title').textContent = tag.textContent;
-    })
+    createPagination(quotes.total_pages)
   })
 
-  let search = document.querySelector('.search-quotes')
-  search.addEventListener('keypress', e => {
-    if(e.key === "Enter")
-    {
-      document.querySelectorAll('.content-quote').forEach(quote => {
-        quote.remove()
-      })
-      let searchValue = search.value
-      console.log(searchValue)
-      searchValue = searchValue.replace(' ', '+')
-      fetch(`https://goodquotesapi.herokuapp.com/author/${searchValue}`).then(response => {
-        return response.json()
-      }).then(quotes => {
-        quotes.quotes.forEach(quote => {
-          displayQuotes(quote)
-          })
-        })
-    }
-  })
+  searchTag()
+  searchQuotes()
+
+
   
 }
 
@@ -407,4 +376,71 @@ function changeState(state){
     stateButton.nextElementSibling.className = "btn btn-sm btn-secondary dropdown-toggle dropdown-toggle-split"
     document.querySelector('#remove-item').style.display = 'none'
   }
+}
+
+function createPagination(maxPage){
+  let content = document.createElement('div')
+  let spanPage = document.createElement('span')
+  let inputPage = document.createElement('input')
+  let spanMaxPage = document.createElement('span')
+
+  content.className = 'content-quote'
+  spanPage.className = 'page'
+  spanMaxPage.className = 'page-max'
+  inputPage.className = 'form-control'
+  inputPage.id = 'pageInput'
+  inputPage.style.width = '9%'
+  inputPage.value = 1
+  inputPage.type = 'number'
+  inputPage.min = '1'
+  inputPage.max = maxPage
+  spanPage.textContent = 'Page: '
+  spanMaxPage.textContent = ` / ${maxPage}`
+
+  content.append(spanPage, inputPage, spanMaxPage)
+  document.querySelector('.body').append(content)
+}
+
+function searchQuotes(){
+  let search = document.querySelector('.search-quotes')
+  search.addEventListener('keypress', e => {
+    if(e.key === "Enter")
+    {
+      document.querySelectorAll('.content-quote').forEach(quote => {
+        quote.remove()
+      })
+      let searchValue = search.value
+      console.log(searchValue)
+      searchValue = searchValue.replace(' ', '+')
+      fetch(`https://goodquotesapi.herokuapp.com/author/${searchValue}`).then(response => {
+        return response.json()
+      }).then(quotes => {
+        quotes.quotes.forEach(quote => {
+          displayQuotes(quote)
+          })
+          createPagination(quotes.total_pages)
+        })
+    }
+  })
+}
+
+function searchTag(){
+  document.querySelectorAll('.dropdown-item').forEach(tags => {
+    tags.addEventListener('click', tag => {
+      tag = tag.target
+      document.querySelectorAll('.content-quote').forEach(quote => {
+        quote.remove()
+      })
+      fetch(`https://goodquotesapi.herokuapp.com/tag/${tag.textContent}`).then(response => {
+        return response.json()
+      }).then(quotes => {
+        quotes.quotes.forEach(quote => {
+          displayQuotes(quote)
+          })
+        createPagination(quotes.total_pages)
+        })
+
+      document.querySelector('.drp-title').textContent = tag.textContent;
+    })
+  })
 }
