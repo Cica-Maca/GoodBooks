@@ -418,3 +418,9 @@
     left: 0px;
     will-change: transform;
 }
+
+.content-quote-0 {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+}

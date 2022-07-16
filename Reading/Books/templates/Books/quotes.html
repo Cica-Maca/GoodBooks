@@ -2,13 +2,14 @@
 {% load static %}
 
 {% block body %}
-<div class="content-quote">
-    <input class="form-control" style="width:60%" type="search" placeholder="Search by author, title" aria-label="Search">
+<div class="content-quote-0">
+    <input class="form-control search-quotes" style="width:60%" type="search" placeholder="Search by author, title" aria-label="Search">
     <div class="dropdown" style="width:18%; margin-left:2%">
-        <button class="btn btn-light dropdown-toggle btn-cstm" style="width:100%" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Tags
+        <button class="btn btn-light dropdown-toggle btn-cstm drp-title" style="width:100%" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Popular
         </button>
         <div class="dropdown-menu drp-st" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item" href="#">Popular</a>
           <a class="dropdown-item" href="#">Love</a>
           <a class="dropdown-item" href="#">Life</a>
           <a class="dropdown-item" href="#">Inspirational</a>

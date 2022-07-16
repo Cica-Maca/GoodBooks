@@ -112,6 +112,44 @@ if (document.URL.includes("quotes")){
       displayQuotes(quote)
     })
   })
+  document.querySelectorAll('.dropdown-item').forEach(tags => {
+    tags.addEventListener('click', tag => {
+      tag = tag.target
+      document.querySelectorAll('.content-quote').forEach(quote => {
+        quote.remove()
+      })
+      fetch(`https://goodquotesapi.herokuapp.com/tag/${tag.textContent}`).then(response => {
+        return response.json()
+      }).then(quotes => {
+        quotes.quotes.forEach(quote => {
+          displayQuotes(quote)
+          })
+        })
+
+      document.querySelector('.drp-title').textContent = tag.textContent;
+    })
+  })
+
+  let search = document.querySelector('.search-quotes')
+  search.addEventListener('keypress', e => {
+    if(e.key === "Enter")
+    {
+      document.querySelectorAll('.content-quote').forEach(quote => {
+        quote.remove()
+      })
+      let searchValue = search.value
+      console.log(searchValue)
+      searchValue = searchValue.replace(' ', '+')
+      fetch(`https://goodquotesapi.herokuapp.com/author/${searchValue}`).then(response => {
+        return response.json()
+      }).then(quotes => {
+        quotes.quotes.forEach(quote => {
+          displayQuotes(quote)
+          })
+        })
+    }
+  })
+  
 }
 
 
@@ -306,11 +344,11 @@ function moveArrow()
 }
 
 function displayQuotes(quote){
-  var contentQuote = document.createElement('div')
-  var divQuote = document.createElement('div')
-  var quoteText = document.createElement('p')
-  var quoteAuthor = document.createElement('p')
-  var publication = document.createElement('a')
+  let contentQuote = document.createElement('div')
+  let divQuote = document.createElement('div')
+  let quoteText = document.createElement('p')
+  let quoteAuthor = document.createElement('p')
+  let publication = document.createElement('a')
 
   contentQuote.className = "content-quote"
   divQuote.className = "quote"
