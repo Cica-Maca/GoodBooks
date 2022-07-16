@@ -399,3 +399,22 @@
 .position-drop {
     transform: translate3d(0px, 38px, 0px) !important;
 }
+
+.btn-cstm:hover {
+    background-color: #382110;
+    color: white
+}
+
+.btn-cstm:focus {
+    background-color: #382110 !important;
+    color: white !important
+}
+
+.drp-st {
+    width: 100%;
+    position: absolute;
+    transform: translate3d(0px, 33px, 0px) !important;
+    top: 0px;
+    left: 0px;
+    will-change: transform;
+}
