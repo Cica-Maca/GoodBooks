@@ -105,22 +105,29 @@ if (document.querySelectorAll('.content-book-hidden').length !== 0){
 }
 
 if (document.URL.includes("quotes")){
-  fetch('https://goodquotesapi.herokuapp.com/tag/popular').then(response => {
-    return response.json()
-  }).then(quotes => {
-    quotes.quotes.forEach(quote => {
-      displayQuotes(quote)
-    })
-    createPagination(quotes.total_pages)
+  PopularQuotes()
+
+  let search = document.querySelector('.search-quotes')
+  search.addEventListener('keypress', e => {
+    if(e.key === "Enter")
+    {
+      document.querySelectorAll('.content-quote').forEach(quote => {
+        quote.remove()
+      })
+      searchQuotes(e.target.value)
+    }
   })
-
-  searchTag()
-  searchQuotes()
-
-
-  
+  let tags = document.querySelectorAll('.dropdown-item').forEach(tag => {
+    tag.addEventListener('click', e =>{
+      document.querySelectorAll('.content-quote').forEach(quote => {
+        quote.remove()
+      })
+      searchQuotes(e.target.textContent)
+      let currentTag = document.querySelector('.drp-title')
+      currentTag.textContent = e.target.textContent
+    })
+  })
 }
-
 
 
 if(document.URL.includes("show"))
@@ -378,7 +385,7 @@ function changeState(state){
   }
 }
 
-function createPagination(maxPage){
+function createPagination(page, maxPage){
   let content = document.createElement('div')
   let spanPage = document.createElement('span')
   let inputPage = document.createElement('input')
@@ -389,8 +396,8 @@ function createPagination(maxPage){
   spanMaxPage.className = 'page-max'
   inputPage.className = 'form-control'
   inputPage.id = 'pageInput'
-  inputPage.style.width = '9%'
-  inputPage.value = 1
+  inputPage.style.width = '70px'
+  inputPage.value = page
   inputPage.type = 'number'
   inputPage.min = '1'
   inputPage.max = maxPage
@@ -401,28 +408,28 @@ function createPagination(maxPage){
   document.querySelector('.body').append(content)
 }
 
-function searchQuotes(){
-  let search = document.querySelector('.search-quotes')
-  search.addEventListener('keypress', e => {
-    if(e.key === "Enter")
-    {
-      document.querySelectorAll('.content-quote').forEach(quote => {
-        quote.remove()
-      })
-      let searchValue = search.value
-      console.log(searchValue)
-      searchValue = searchValue.replace(' ', '+')
-      fetch(`https://goodquotesapi.herokuapp.com/author/${searchValue}`).then(response => {
+function searchQuotes(search, page){
+      page = page || '1'
+      search = search.replace(' ', '+')
+      fetch(`https://goodquotesapi.herokuapp.com/author/${search}?page=${page}`).then(response => {
         return response.json()
       }).then(quotes => {
         quotes.quotes.forEach(quote => {
           displayQuotes(quote)
           })
-          createPagination(quotes.total_pages)
+          createPagination(page, quotes.total_pages)
+          document.querySelector('#pageInput').addEventListener('keypress', e => {
+            if (e.key === "Enter"){
+              document.querySelectorAll('.content-quote').forEach(element => {
+                element.remove()
+              })
+              searchQuotes(search, e.target.value)
+            }
+          })
+
         })
-    }
-  })
 }
+
 
 function searchTag(){
   document.querySelectorAll('.dropdown-item').forEach(tags => {
@@ -441,6 +448,26 @@ function searchTag(){
         })
 
       document.querySelector('.drp-title').textContent = tag.textContent;
+    })
+  })
+}
+
+function PopularQuotes(page){
+  page = page || '1'
+  fetch(`https://goodquotesapi.herokuapp.com/tag/popular?page=${page}`).then(response => {
+    return response.json()
+  }).then(quotes => {
+    quotes.quotes.forEach(quote => {
+      displayQuotes(quote)
+    })
+    createPagination(page, quotes.total_pages)
+    document.querySelector('#pageInput').addEventListener('keypress', e => {
+      if (e.key === "Enter"){
+        document.querySelectorAll('.content-quote').forEach(element => {
+          element.remove()
+        })
+        PopularQuotes(e.target.value)
+      }
     })
   })
 }
