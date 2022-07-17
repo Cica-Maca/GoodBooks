@@ -117,14 +117,15 @@ if (document.URL.includes("quotes")){
       searchQuotes(e.target.value)
     }
   })
-  let tags = document.querySelectorAll('.dropdown-item').forEach(tag => {
+  document.querySelectorAll('.dropdown-item').forEach(tag => {
     tag.addEventListener('click', e =>{
+      tagClicked = e.target.textContent
       document.querySelectorAll('.content-quote').forEach(quote => {
         quote.remove()
       })
-      searchQuotes(e.target.textContent)
+      searchQuotes(tagClicked)
       let currentTag = document.querySelector('.drp-title')
-      currentTag.textContent = e.target.textContent
+      currentTag.textContent = tagClicked
     })
   })
 }
@@ -428,28 +429,6 @@ function searchQuotes(search, page){
           })
 
         })
-}
-
-
-function searchTag(){
-  document.querySelectorAll('.dropdown-item').forEach(tags => {
-    tags.addEventListener('click', tag => {
-      tag = tag.target
-      document.querySelectorAll('.content-quote').forEach(quote => {
-        quote.remove()
-      })
-      fetch(`https://goodquotesapi.herokuapp.com/tag/${tag.textContent}`).then(response => {
-        return response.json()
-      }).then(quotes => {
-        quotes.quotes.forEach(quote => {
-          displayQuotes(quote)
-          })
-        createPagination(quotes.total_pages)
-        })
-
-      document.querySelector('.drp-title').textContent = tag.textContent;
-    })
-  })
 }
 
 function PopularQuotes(page){
