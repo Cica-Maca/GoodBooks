@@ -434,3 +434,9 @@
     font-size: 22px;
     margin-left: 10px;
 }
+
+.error-message {
+    margin: 0 auto;
+    color: red;
+    font-size: 22px;
+}

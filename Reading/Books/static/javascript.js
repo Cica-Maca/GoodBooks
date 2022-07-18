@@ -74,10 +74,13 @@ document.querySelectorAll('.index-genre').forEach(genre =>{
   if (genre.id !== "top-books-week" && genre.id !== "book-author"){
   fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=40&Type=books`)
     .then(response => {
+      if (!response.ok) return Promise.reject(response);
       return response.json()
     })
       .then(items => {
         bookList(items, genre)
+        }).catch(error => {
+          serviceError(error, genre)
         })
     }
   })
@@ -148,7 +151,6 @@ if(document.URL.includes("show"))
       }).then(response => response)
       .then(result => {
         if(result.status === 201 || result.status === 200){
-          console.log(event.target.textContent)
           changeState(event.target.textContent)
         }
       })
@@ -178,6 +180,7 @@ function authorBooks(authors, title){
   authors.forEach(function(author, i){
     console.log(author)
     fetch(`https://www.googleapis.com/books/v1/volumes?q=inauthor:"${author.id}"&maxResults=40&printType=books`).then(response => {
+    if (!response.ok) return Promise.reject(response);
     return response.json()
   })
     .then(items => {
@@ -193,7 +196,9 @@ function authorBooks(authors, title){
         }
 
       }
-    )
+    ).catch(error => {
+      serviceError(error, author)
+    })
   })
   
 }
@@ -413,6 +418,7 @@ function searchQuotes(search, page){
       page = page || '1'
       search = search.replace(' ', '+')
       fetch(`https://goodquotesapi.herokuapp.com/author/${search}?page=${page}`).then(response => {
+        if (!response.ok) return Promise.reject(response);
         return response.json()
       }).then(quotes => {
         quotes.quotes.forEach(quote => {
@@ -428,12 +434,15 @@ function searchQuotes(search, page){
             }
           })
 
-        })
+        }).catch(error => {
+          console.log(error)
+})
 }
 
 function PopularQuotes(page){
   page = page || '1'
   fetch(`https://goodquotesapi.herokuapp.com/tag/popular?page=${page}`).then(response => {
+    if (!response.ok) return Promise.reject(response);
     return response.json()
   }).then(quotes => {
     quotes.quotes.forEach(quote => {
@@ -448,5 +457,16 @@ function PopularQuotes(page){
         PopularQuotes(e.target.value)
       }
     })
+  }).catch(error => {
+    serviceError(error)
   })
+}
+
+function serviceError(error, div){
+  errorMessage = document.createElement('p')
+  errorMessage.textContent = 'Service unavailable'
+  errorMessage.className = 'error-message'
+  div.append(errorMessage)
+
+
 }
