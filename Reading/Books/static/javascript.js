@@ -96,7 +96,7 @@ if (document.querySelector('#show-more-desc') != null){
 }
 
 // Checking if the user is on book_page and if true call authorBooks()
-if (document.querySelectorAll('.content-book-hidden').length !== 0){
+if (document.URL.includes('show')){
   let author_name = document.querySelectorAll('.content-book-hidden')
   let book_title = document.querySelector('#content-book-title').innerHTML
   authorBooks(author_name, book_title)
