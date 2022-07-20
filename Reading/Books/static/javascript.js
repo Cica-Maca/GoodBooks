@@ -4,24 +4,23 @@ var screenWidth;
 if (!isMobile())
 {
   // Positioning info-card
-  var info;
+  let info;
   document.querySelectorAll('.index-genre').forEach(books => {
     books.addEventListener('mouseover', event => {
-      var book = event.target
+      let book = event.target
       if(book.className === 'book-img')
       {
         book = book.parentNode
       }
       if (book.className === 'list-book')
       {
-        console.log(book)
   
         window.onresize = displayWindowSize()
         window.onload = displayWindowSize()
         rect = book.getBoundingClientRect()
-        var pos = Math.round(rect.x)
+        let pos = Math.round(rect.x)
         info = book.parentNode.nextElementSibling
-        var width = book.offsetWidth;
+        let width = book.offsetWidth;
         if (pos + width + 300 > screenWidth) // 300 is the width of info-card
         {
           info.setAttribute('style', `left: ${pos-300}px;`)
@@ -242,8 +241,7 @@ function bookList(items, genre, title){
 
   genre = genre || document.querySelector('.index-genre');
   title = title || null
-  console.log(title)
-  var i = 0;
+  let i = 0;
   items.items.every(item => {
     if (i > 30) return false
     try {
@@ -299,7 +297,6 @@ function bookList(items, genre, title){
     if(item.volumeInfo.industryIdentifiers[0].type == 'OTHER' || !info_card_desc.textContent || title === book_name.textContent){
       genre_inner.remove()
       i--
-      console.log("izbriso")
     }
     i++
     return true;
