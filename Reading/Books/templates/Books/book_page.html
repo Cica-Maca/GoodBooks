@@ -40,8 +40,9 @@
             <h4 id="content-book-title">{{book.title}}</h4>
             <h6 id="content-book-author">by {% if book.more %} {{ book.author.0 }}, {{ book.author.1 }} {% else %} {{ book.author }} {% endif %}</h6>
             <div class="show">
-                <p class="content-info-desc-hide">{{ book.desc | safe }}</p><a href="#" id="show-more-desc">...more</a>
+                {{ book.desc | safe }}
             </div>
+            <a href="#" id="show-more-desc">...more</a>
             <div class="rating">
                 Rating: {{ book.rating }}/5
             </div>

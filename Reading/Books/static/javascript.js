@@ -85,14 +85,14 @@ document.querySelectorAll('.index-genre').forEach(genre =>{
   })
   
 // Checking if there is show more div and if true call showMore()
-if (document.querySelector('#show-more-desc') != null){
-  let show_desc = document.querySelector('#show-more-desc')
-  if (show_desc.previousElementSibling.innerHTML.length < 300){
-    show_desc.remove()
+if (document.querySelector('.show') != null){
+  let show = document.querySelector('.show')
+  if (show.height > 900){
+    show.remove()
   }else {
+  let show_desc = document.querySelector('#show-more-desc')
   show_desc.addEventListener('click', e => {
-    element_desc = document.querySelector('#show-more-desc')
-    showMore(element_desc.previousElementSibling, element_desc)
+    showMore(show, show_desc)
   })
   }
 }
@@ -228,10 +228,10 @@ function displayDivSize(div) {
 // Read More function
 function showMore(text, state) {
   if (state.innerHTML === "...more"){
-    text.classList.replace('content-info-desc-hide', 'content-info-desc-show')
+    text.style.webkitLineClamp = "1000"
     state.innerHTML = "less..."
   }else{
-    text.classList.replace('content-info-desc-show', 'content-info-desc-hide')
+    text.style.webkitLineClamp = "10"
     state.innerHTML = "...more"
   }
 }
