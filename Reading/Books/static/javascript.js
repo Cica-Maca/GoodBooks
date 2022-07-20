@@ -435,7 +435,7 @@ function searchQuotes(search, page){
           })
 
         }).catch(error => {
-          console.log(error)
+          serviceError("No results", document.querySelector('.body'))
 })
 }
 
@@ -458,13 +458,13 @@ function PopularQuotes(page){
       }
     })
   }).catch(error => {
-    serviceError(error)
+    serviceError("Service unavailable", document.querySelector('.body'))
   })
 }
 
 function serviceError(error, div){
   errorMessage = document.createElement('p')
-  errorMessage.textContent = 'Service unavailable'
+  errorMessage.textContent = error
   errorMessage.className = 'error-message'
   div.append(errorMessage)
 
