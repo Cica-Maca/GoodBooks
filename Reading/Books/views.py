@@ -77,6 +77,45 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('index'))
 
 def book_page(request, isbn):
+    book = {}
+    if isbn.isdigit():
+        url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
+        book_data = requests.get(url=url).json()
+        book["title"] = book_data["items"][0]["volumeInfo"]["title"]
+        try:
+            book["author"] = [book_data["items"][0]["volumeInfo"]["authors"][0], book_data["items"][0]["volumeInfo"]["authors"][1]]
+            book["more"] = "True"
+        except:
+            book["author"] = book_data["items"][0]["volumeInfo"]["authors"][0]
+
+        book["date"] = book_data["items"][0]["volumeInfo"]["publishedDate"]
+        book["desc"] = book_data["items"][0]["volumeInfo"]["description"]
+        book["page_count"] = book_data["items"][0]["volumeInfo"]["pageCount"]
+        try:
+            book["rating"] = book_data["items"][0]["volumeInfo"]["averageRating"]
+        except:
+            book["rating"] = '0'
+        book["image"] = book_data["items"][0]["volumeInfo"]["imageLinks"]["thumbnail"]
+    else: # If not digit, isbn is then an id of a book.
+        url = f"https://www.googleapis.com/books/v1/volumes/{isbn}"
+        book_data = requests.get(url=url).json()
+        book["title"] = book_data["volumeInfo"]["title"]
+        try:
+            book["author"] = [book_data["volumeInfo"]["authors"][0], book_data["volumeInfo"]["authors"][1]]
+            book["more"] = "True"
+        except:
+            book["author"] = book_data["volumeInfo"]["authors"][0]
+
+        book["date"] = book_data["volumeInfo"]["publishedDate"]
+        book["desc"] = book_data["volumeInfo"]["description"]
+        book["page_count"] = book_data["volumeInfo"]["pageCount"]
+        try:
+            book["rating"] = book_data["volumeInfo"]["averageRating"]
+        except:
+            book["rating"] = '0'
+        book["image"] = book_data["volumeInfo"]["imageLinks"]["thumbnail"]
+
+    
     info_book_bool = False
     if request.user.is_authenticated:
         user = request.user
@@ -89,25 +128,7 @@ def book_page(request, isbn):
             elif user_book.is_reading:
                 info_book_bool = "Currently reading"
         except:
-            pass   
-    url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
-    book_data = requests.get(url=url).json()
-    book = {}
-    book["title"] = book_data["items"][0]["volumeInfo"]["title"]
-    try:
-        book["author"] = [book_data["items"][0]["volumeInfo"]["authors"][0], book_data["items"][0]["volumeInfo"]["authors"][1]]
-        book["more"] = "True"
-    except:
-        book["author"] = book_data["items"][0]["volumeInfo"]["authors"][0]
-
-    book["date"] = book_data["items"][0]["volumeInfo"]["publishedDate"]
-    book["desc"] = book_data["items"][0]["volumeInfo"]["description"]
-    book["page_count"] = book_data["items"][0]["volumeInfo"]["pageCount"]
-    try:
-        book["rating"] = book_data["items"][0]["volumeInfo"]["averageRating"]
-    except:
-        book["rating"] = '0'
-    book["image"] = book_data["items"][0]["volumeInfo"]["imageLinks"]["thumbnail"]
+            pass
     return render(request, "books/book_page.html", {
         "book" : book,
         "info_book": info_book_bool

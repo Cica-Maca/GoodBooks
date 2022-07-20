@@ -259,7 +259,7 @@ function bookList(items, genre, title){
     genre_inner.className = `inner inner-genre`
 
     genre_inner_link.className = "link-book"
-    genre_inner_link.href = '/Books/show/' + item.volumeInfo.industryIdentifiers[0].identifier
+    genre_inner_link.href = '/Books/show/' + item.id
     genre_inner_link.id = item.volumeInfo.industryIdentifiers[0].identifier
 
     link_list_book.className = "list-book"
