@@ -71,12 +71,13 @@ else {
 // Getting all divs with index-genre class and fetching books for every genre in divs by calling bookList() for every genre.
 document.querySelectorAll('.index-genre').forEach(genre =>{
   if (genre.id !== "top-books-week" && genre.id !== "book-author"){
-  fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=40&Type=books`)
+  fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=40&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`)
     .then(response => {
       if (!response.ok) return Promise.reject(response);
       return response.json()
     })
       .then(items => {
+        console.log(items)
         bookList(items, genre)
         }).catch(error => {
           serviceError(error, genre)
@@ -85,10 +86,10 @@ document.querySelectorAll('.index-genre').forEach(genre =>{
   })
   
 // Checking if there is show more div and if true call showMore()
-if (document.querySelector('.show') != null){
+if (document.URL.includes('show')){
   let show = document.querySelector('.show')
-  if (show.height > 900){
-    show.remove()
+  if (show.clientHeight + show.clientWidth < 900){
+    document.querySelector('#show-more-desc').remove()
   }else {
   let show_desc = document.querySelector('#show-more-desc')
   show_desc.addEventListener('click', e => {
@@ -178,7 +179,7 @@ if(document.URL.includes("show"))
 function authorBooks(authors, title){
   authors.forEach(function(author, i){
     console.log(author)
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=inauthor:"${author.id}"&maxResults=40&printType=books`).then(response => {
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=inauthor:"${author.id}"&maxResults=40&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`).then(response => {
     if (!response.ok) return Promise.reject(response);
     return response.json()
   })
@@ -294,7 +295,7 @@ function bookList(items, genre, title){
     genre_inner.append(genre_inner_link, info_card)
     // genre_div.innerHTML = '<div class="{{ genre }}-inner inner-genre"><a href="" class="link-book" id=""><li class="list-book"><img class="book-img" src="Loading..."><div class="book-name"></div></li></a><div class="info-card"><h6 class="info-card-title"></h6><div class="info-card-author">by <h6 style="margin-left: 3px"></h6></div><div class="info-card-desc"></div></div></div>'
     genre.append(genre_inner)
-    if(item.volumeInfo.industryIdentifiers[0].type == 'OTHER' || !info_card_desc.textContent || title === book_name.textContent){
+    if(title === book_name.textContent){
       genre_inner.remove()
       i--
     }

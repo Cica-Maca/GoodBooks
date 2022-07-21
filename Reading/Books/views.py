@@ -89,7 +89,10 @@ def book_page(request, isbn):
             book["author"] = book_data["items"][0]["volumeInfo"]["authors"][0]
 
         book["date"] = book_data["items"][0]["volumeInfo"]["publishedDate"]
-        book["desc"] = book_data["items"][0]["volumeInfo"]["description"]
+        try:
+            book["desc"] = book_data["items"][0]["volumeInfo"]["description"]
+        except:
+            book["desc"] = "No description"
         book["page_count"] = book_data["items"][0]["volumeInfo"]["pageCount"]
         try:
             book["rating"] = book_data["items"][0]["volumeInfo"]["averageRating"]
@@ -105,9 +108,11 @@ def book_page(request, isbn):
             book["more"] = "True"
         except:
             book["author"] = book_data["volumeInfo"]["authors"][0]
-
         book["date"] = book_data["volumeInfo"]["publishedDate"]
-        book["desc"] = book_data["volumeInfo"]["description"]
+        try:
+            book["desc"] = book_data["volumeInfo"]["description"]
+        except:
+            book["desc"] = "No description"
         book["page_count"] = book_data["volumeInfo"]["pageCount"]
         try:
             book["rating"] = book_data["volumeInfo"]["averageRating"]
