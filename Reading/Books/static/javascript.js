@@ -46,6 +46,23 @@ if (!isMobile())
       
     })
     item.children[0].addEventListener('click', e => {
+      if (item.id !== "top-books-week" && item.id !== "book-author"){
+        let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
+        if(Number(item.dataset.startindex) + maxVisibleItemsOnScreen < 200){
+          item.setAttribute('data-startIndex', Number(item.dataset.startindex) + maxVisibleItemsOnScreen + 1)
+          fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${item.id}&maxResults=${maxVisibleItemsOnScreen}&startIndex=${item.dataset.startindex}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`)
+          .then(response => {
+            if (!response.ok) return Promise.reject(response);
+            return response.json()
+          })
+            .then(items => {
+              console.log(items)
+              bookList(items, item)
+              }).catch(error => {
+                serviceError(error, item)
+              })
+          }
+      }
       window.onresize = displayDivSize(item)
       window.onload = displayDivSize(item)
   
@@ -72,7 +89,6 @@ else {
 document.querySelectorAll('.index-genre').forEach(genre =>{
   if (genre.id !== "top-books-week" && genre.id !== "book-author"){
     let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
-    console.log(maxVisibleItemsOnScreen)
     genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
   fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=${maxVisibleItemsOnScreen}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`)
     .then(response => {
@@ -306,7 +322,6 @@ function bookList(items, genre, title){
     return true;
     }catch(error)
     {
-      console.log(genre, error)
       genre_inner.remove()
       return true;
       
