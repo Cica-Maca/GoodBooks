@@ -71,7 +71,9 @@ else {
 // Getting all divs with index-genre class and fetching books for every genre in divs by calling bookList() for every genre.
 document.querySelectorAll('.index-genre').forEach(genre =>{
   if (genre.id !== "top-books-week" && genre.id !== "book-author"){
-  fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=40&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`)
+    let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
+    console.log(maxVisibleItemsOnScreen)
+  fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=${maxVisibleItemsOnScreen}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`)
     .then(response => {
       if (!response.ok) return Promise.reject(response);
       return response.json()
@@ -303,6 +305,7 @@ function bookList(items, genre, title){
     return true;
     }catch(error)
     {
+      console.log(genre, error)
       genre_inner.remove()
       return true;
       
