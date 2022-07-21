@@ -73,6 +73,7 @@ document.querySelectorAll('.index-genre').forEach(genre =>{
   if (genre.id !== "top-books-week" && genre.id !== "book-author"){
     let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
     console.log(maxVisibleItemsOnScreen)
+    genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
   fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=${maxVisibleItemsOnScreen}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`)
     .then(response => {
       if (!response.ok) return Promise.reject(response);
