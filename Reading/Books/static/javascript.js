@@ -48,7 +48,8 @@ if (!isMobile())
     item.children[0].addEventListener('click', e => {
       if (item.id !== "top-books-week" && item.id !== "book-author"){
         let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
-        requestBooks(item, maxVisibleItemsOnScreen)
+        let loadItemsNumber = maxVisibleItemsOnScreen + Number(item.dataset.startindex) + 1
+        requestBooks(item, loadItemsNumber)
       }
       window.onresize = displayDivSize(item)
       window.onload = displayDivSize(item)
@@ -77,17 +78,8 @@ document.querySelectorAll('.index-genre').forEach(genre =>{
   if (genre.id !== "top-books-week" && genre.id !== "book-author"){
     let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
     genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
-  fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=${maxVisibleItemsOnScreen}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`)
-    .then(response => {
-      if (!response.ok) return Promise.reject(response);
-      return response.json()
-    })
-      .then(items => {
-        console.log(items)
-        bookList(items, genre)
-        }).catch(error => {
-          serviceError(error, genre)
-        })
+
+    requestBooks(genre, maxVisibleItemsOnScreen)
     }
   })
   
@@ -475,22 +467,27 @@ function serviceError(error, div){
 
 }
 
-function requestBooks(genre, visibleItems)
+function requestBooks(genre, loadItemsNumber)
 {
-  let itemsLoaded = Number(genre.dataset.startindex)
-  let LoadFrom = itemsLoaded + visibleItems + 1
-  if(LoadFrom < 200){ // 200 is max total items returned for genres
-    genre.setAttribute('data-startIndex', LoadFrom)
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=${visibleItems}&startIndex=${LoadFrom}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`)
+  let visibleItems = Math.ceil(screen.width / 120 + 5)
+  let url
+  if (loadItemsNumber === visibleItems){
+    url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=${visibleItems}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
+  }
+  else {
+    url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=${visibleItems}&startIndex=${loadItemsNumber}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
+    genre.setAttribute('data-startIndex', loadItemsNumber)
+  }
+  if(loadItemsNumber < 200){ // 200 is max total items returned for genres
+    fetch(url)
     .then(response => {
       if (!response.ok) return Promise.reject(response);
       return response.json()
     })
       .then(items => {
-        console.log(items)
         bookList(items, genre)
         }).catch(error => {
-          serviceError(error, item)
+          serviceError(error, genre)
         })
     }
 }
