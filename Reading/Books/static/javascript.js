@@ -48,20 +48,7 @@ if (!isMobile())
     item.children[0].addEventListener('click', e => {
       if (item.id !== "top-books-week" && item.id !== "book-author"){
         let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
-        if(Number(item.dataset.startindex) + maxVisibleItemsOnScreen < 200){
-          item.setAttribute('data-startIndex', Number(item.dataset.startindex) + maxVisibleItemsOnScreen + 1)
-          fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${item.id}&maxResults=${maxVisibleItemsOnScreen}&startIndex=${item.dataset.startindex}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`)
-          .then(response => {
-            if (!response.ok) return Promise.reject(response);
-            return response.json()
-          })
-            .then(items => {
-              console.log(items)
-              bookList(items, item)
-              }).catch(error => {
-                serviceError(error, item)
-              })
-          }
+        requestBooks(item, maxVisibleItemsOnScreen)
       }
       window.onresize = displayDivSize(item)
       window.onload = displayDivSize(item)
@@ -486,4 +473,24 @@ function serviceError(error, div){
   div.append(errorMessage)
 
 
+}
+
+function requestBooks(genre, visibleItems)
+{
+  let itemsLoaded = Number(genre.dataset.startindex)
+  let LoadFrom = itemsLoaded + visibleItems + 1
+  if(LoadFrom < 200){ // 200 is max total items returned for genres
+    genre.setAttribute('data-startIndex', LoadFrom)
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=${visibleItems}&startIndex=${LoadFrom}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`)
+    .then(response => {
+      if (!response.ok) return Promise.reject(response);
+      return response.json()
+    })
+      .then(items => {
+        console.log(items)
+        bookList(items, genre)
+        }).catch(error => {
+          serviceError(error, item)
+        })
+    }
 }
