@@ -6,6 +6,7 @@ if (!isMobile())
   // Positioning info-card
   let info;
   document.querySelectorAll('.index-genre').forEach(books => {
+    // Displaying info-card next to book div
     books.addEventListener('mouseover', event => {
       let book = event.target
       if(book.className === 'book-img')
@@ -31,38 +32,38 @@ if (!isMobile())
         
       }
     })
-  })
-  // Adding event listeners on arrow divs inside index-genre divs for scroll behavior. 
-  document.querySelectorAll('.index-genre').forEach(item => {
-    item.children[1].addEventListener('click', e => {    
-      window.onresize = displayDivSize(item)
-      window.onload = displayDivSize(item)
+
+    // Scrolling to right when clicking on the arrows inside index-genre
+    // calling requestBooks for pagination
+    books.children[1].addEventListener('click', e => {    
+      window.onresize = displayDivSize(books)
+      window.onload = displayDivSize(books)
   
-      item.scrollBy({
+      books.scrollBy({
         top: 0,
         left: -screenWidth+150,
         behavior: 'smooth'
       });
       
     })
-    item.children[0].addEventListener('click', e => {
-      if (item.id !== "top-books-week" && item.id !== "book-author"){
+    books.children[0].addEventListener('click', e => {
+      if (books.id !== "top-books-week" && books.id !== "book-author"){
         let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
-        let loadItemsNumber = maxVisibleItemsOnScreen + Number(item.dataset.startindex) + 1
-        requestBooks(item, loadItemsNumber)
+        let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
+        requestBooks(books, loadItemsNumber)
       }
-      window.onresize = displayDivSize(item)
-      window.onload = displayDivSize(item)
+      window.onresize = displayDivSize(books)
+      window.onload = displayDivSize(books)
   
-      item.scrollBy({
+      books.scrollBy({
         top: 0,
         left: screenWidth-150,
         behavior: 'smooth'
       });
       
     })
-  })
 
+  })
 }
 else {
   document.querySelectorAll('.arrow').forEach(arrow => {
