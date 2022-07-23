@@ -277,7 +277,7 @@
     margin-left:20px;
 }
 
-.show {
+.show-desc {
     font-family: "Merriweather", "Georgia", serif;
     line-height: 21px;
     margin:0;
@@ -450,4 +450,13 @@
     margin: 0 auto;
     color: red;
     font-size: 22px;
+}
+
+.search-results {
+    position: absolute;
+    width: 248px;
+    height: 600px;
+    background-color: red;
+    transform: translate3d(146px, 38px, 0px);
+    z-index: 10000
 }

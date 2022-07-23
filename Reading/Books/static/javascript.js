@@ -157,6 +157,11 @@ if(document.URL.includes("show"))
   }) 
 }
 
+document.getElementById('search-books').addEventListener("submit", () => {
+  let search = document.getElementById('search-query').value
+  let searchResult = searchBooks(search)
+})
+
 
 
 
