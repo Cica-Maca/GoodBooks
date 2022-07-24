@@ -86,7 +86,7 @@ document.querySelectorAll('.index-genre').forEach(genre =>{
   
 // Checking if there is show more div and if true call showMore()
 if (document.URL.includes('show')){
-  let show = document.querySelector('.show')
+  let show = document.querySelector('.show-desc')
   if (show.clientHeight + show.clientWidth < 900){
     document.querySelector('#show-more-desc').remove()
   }else {
@@ -546,7 +546,7 @@ function displaySearchResults(book) {
   image.src = book.volumeInfo.imageLinks.thumbnail
   author.textContent = book.volumeInfo.authors[0]
   title.textContent = book.volumeInfo.title
-  link.href = `show/${book.id}`
+  link.href = `/Books/show/${book.id}`
 
   itemDetails.append(title, author)
   saerchItem.append(image, itemDetails)
