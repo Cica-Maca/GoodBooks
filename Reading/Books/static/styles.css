@@ -454,36 +454,38 @@
 
 .search-results {
     position: absolute;
-    width: 248px;
-    height: 600px;
+    width: 276px;
+    height: 1000px;
     background-color: white;
-    transform: translate3d(146px, 38px, 0px);
+    transform: translate3d(146px, 43px, 0px);
     z-index: 10000;
-    list-style:none
+    list-style:none;
 }
 
 .search-results-item {
     height: 100px;
-    justify-content: space-between;
     display: flex;
     padding: 10px;
+    transition: 0.2s;
 }
 
 .search-item-image {
+    transition: 0.2s;
     width: 60px;
-    margin-left: 20px;
 }
 
 .search-results > a {
     color: rgba(0,0,0,.9);
     text-decoration: none;
+    transition: 0.2s;
 }
 
 
 .item-details {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    padding-left:10px;
+    transition: 0.2s;
 }
 
 .search-results > a:hover {
@@ -496,6 +498,6 @@
 }
 
 .search-results-item:hover > img {
-    transform: scale(1.5);
+    transform: scale(1.2);
     transition: 0.2s;
 }

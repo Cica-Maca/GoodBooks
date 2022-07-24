@@ -162,9 +162,18 @@ document.getElementById('search-books').addEventListener("submit", () => {
   searchBooks(search)
   .then(books => {
     document.querySelector('.search-results').style.display = "block"
+    document.querySelector('.search-results').innerHTML = ""
+    books.items.forEach(book => {
+      displaySearchResults(book)
+    })
   })
 })
 
+document.onclick = e => {
+  if (e.target.className !== "search-results" && e.target.id !== "search-query"){
+    HideSearchResults()
+  }
+}
 
 
 
@@ -509,4 +518,34 @@ function searchBooks(search){
       return response.json()
     })
     .then(books => (books))
+}
+
+function displaySearchResults(book) {
+  let link = document.createElement('a')
+  let saerchItem = document.createElement('div')
+  let image = document.createElement('img')
+  let itemDetails = document.createElement('div')
+  let author = document.createElement('h6')
+  let title = document.createElement('h5')
+
+  saerchItem.className = "search-results-item"
+  image.className = "search-item-image"
+  itemDetails.className = "item-details"
+  author.style.fontSize = "14px"
+  title.style.fontSize = "15px"
+
+  image.src = book.volumeInfo.imageLinks.thumbnail
+  author.textContent = book.volumeInfo.authors[0]
+  title.textContent = book.volumeInfo.title
+  link.href = `show/${book.id}`
+
+  itemDetails.append(title, author)
+  saerchItem.append(image, itemDetails)
+  link.append(saerchItem)
+
+  document.querySelector('.search-results').append(link)
+}
+
+function HideSearchResults() {
+  document.querySelector('.search-results').style.display = "none"
 }
