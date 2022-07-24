@@ -456,7 +456,46 @@
     position: absolute;
     width: 248px;
     height: 600px;
-    background-color: red;
+    background-color: white;
     transform: translate3d(146px, 38px, 0px);
-    z-index: 10000
+    z-index: 10000;
+    list-style:none
+}
+
+.search-results-item {
+    height: 100px;
+    justify-content: space-between;
+    display: flex;
+    padding: 10px;
+}
+
+.search-item-image {
+    width: 60px;
+    margin-left: 20px;
+}
+
+.search-results > a {
+    color: rgba(0,0,0,.9);
+    text-decoration: none;
+}
+
+
+.item-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.search-results > a:hover {
+    color: white;
+    transition: 0.2s;
+}
+.search-results-item:hover {
+    background-color: #382110;
+    transition: 0.2s;
+}
+
+.search-results-item:hover > img {
+    transform: scale(1.5);
+    transition: 0.2s;
 }

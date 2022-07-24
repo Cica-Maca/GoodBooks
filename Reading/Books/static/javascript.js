@@ -159,7 +159,10 @@ if(document.URL.includes("show"))
 
 document.getElementById('search-books').addEventListener("submit", () => {
   let search = document.getElementById('search-query').value
-  let searchResult = searchBooks(search)
+  searchBooks(search)
+  .then(books => {
+    document.querySelector('.search-results').style.display = "block"
+  })
 })
 
 
@@ -496,4 +499,14 @@ function requestBooks(genre, loadItemsNumber)
           serviceError(error, genre)
         })
     }
+}
+
+function searchBooks(search){
+  search = search.replace(' ', '%')
+  return fetch(`https://www.googleapis.com/books/v1/volumes?q=intitle:"${search}"&langRestrict=en`)
+    .then(response => {
+      if (!response.ok) return Promise.reject(response);
+      return response.json()
+    })
+    .then(books => (books))
 }
