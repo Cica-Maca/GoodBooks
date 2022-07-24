@@ -171,6 +171,7 @@ document.getElementById('search-books').addEventListener("submit", () => {
     }else {
       searchResultsDiv.textContent = "No results"
     }
+    searchResultsDiv.append(AdvancedSearchLink())
   })
 })
 
@@ -556,4 +557,12 @@ function displaySearchResults(book) {
 
 function HideSearchResults() {
   document.querySelector('.search-results').style.display = "none"
+}
+
+function AdvancedSearchLink() {
+  let link = document.createElement('a')
+  link.className = "as"
+  link.textContent = "Advanced Search"
+  link.href = "advanced"
+  return link
 }
