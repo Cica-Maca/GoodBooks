@@ -563,6 +563,6 @@ function AdvancedSearchLink() {
   let link = document.createElement('a')
   link.className = "as"
   link.textContent = "Advanced Search"
-  link.href = "advanced"
+  link.href = "/Books/advanced"
   return link
 }

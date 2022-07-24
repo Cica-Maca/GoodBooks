@@ -162,6 +162,10 @@ def BookState(request):
         user_book.objects.get(user_id=request.user, book_isbn=data['isbn']).delete()
     return JsonResponse({"message": "Success"}, status=201)
 
+def advanced_search(request):
+    return render(request, "books/advancedSearch.html")
+
+
 def top_books():
     url = "https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=dJm5Qeq1IAZgEJ7j6YmBAPLWA23SrzdP"
     data = requests.get(url=url).json()

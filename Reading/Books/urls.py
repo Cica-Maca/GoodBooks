@@ -10,5 +10,6 @@ urlpatterns = [
     path("show/<str:isbn>", views.book_page, name="book_page"),
     path("quotes", views.quotes, name="quotes"),
     path("toisbn/<str:title>", views.BookToLink, name="toisbn"),
-    path("state", views.BookState, name="bookstate")
+    path("state", views.BookState, name="bookstate"),
+    path("advanced", views.advanced_search, name="advanced")
 ]
