@@ -97,6 +97,8 @@
     padding-right: 5px;
     padding-left: 5px;
     overflow: hidden;
+    background-color: white;
+    transition: 0.2s
 }
 
 .index-genre li:hover {
@@ -455,7 +457,7 @@
 .search-results {
     position: absolute;
     width: 276px;
-    height: 1000px;
+    height: fit-content;
     background-color: white;
     transform: translate3d(146px, 43px, 0px);
     z-index: 10000;
@@ -466,7 +468,8 @@
     height: 100px;
     display: flex;
     padding: 10px;
-    transition: 0.2s;
+    background-color: white;
+    transition: 0.2s
 }
 
 .search-item-image {
@@ -477,7 +480,6 @@
 .search-results > a {
     color: rgba(0,0,0,.9);
     text-decoration: none;
-    transition: 0.2s;
 }
 
 
@@ -485,16 +487,15 @@
     display: flex;
     flex-direction: column;
     padding-left:10px;
-    transition: 0.2s;
+
 }
 
 .search-results > a:hover {
     color: white;
-    transition: 0.2s;
 }
 .search-results-item:hover {
     background-color: #382110;
-    transition: 0.2s;
+    transition: 0.2s
 }
 
 .search-results-item:hover > img {

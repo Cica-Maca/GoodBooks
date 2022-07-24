@@ -159,13 +159,18 @@ if(document.URL.includes("show"))
 
 document.getElementById('search-books').addEventListener("submit", () => {
   let search = document.getElementById('search-query').value
+  let searchResultsDiv = document.querySelector('.search-results')
   searchBooks(search)
   .then(books => {
-    document.querySelector('.search-results').style.display = "block"
-    document.querySelector('.search-results').innerHTML = ""
-    books.items.forEach(book => {
-      displaySearchResults(book)
-    })
+    searchResultsDiv.style.display = "block"
+    searchResultsDiv.innerHTML = ""
+    if (books.totalItems > 0){
+      books.items.forEach(book => {
+        displaySearchResults(book)
+      })
+    }else {
+      searchResultsDiv.textContent = "No results"
+    }
   })
 })
 
@@ -510,7 +515,7 @@ function requestBooks(genre, loadItemsNumber)
     }
 }
 
-function searchBooks(search){
+async function searchBooks(search){
   search = search.replace(' ', '%')
   return fetch(`https://www.googleapis.com/books/v1/volumes?q=intitle:"${search}"&langRestrict=en`)
     .then(response => {
@@ -518,6 +523,9 @@ function searchBooks(search){
       return response.json()
     })
     .then(books => (books))
+    .catch(error => {
+      console.log(error)
+    })
 }
 
 function displaySearchResults(book) {
