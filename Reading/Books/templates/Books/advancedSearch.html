@@ -3,4 +3,70 @@
 
 {% block body %}
 
+    <form action="{% url 'advanced' %}" method="POST" style="width: 50%; margin: 0 auto;">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="Title">With the exact title</label>
+            <input type="text" class="form-control" id="ExactTitle" placeholder="Title">
+            <small class="form-text text-muted">E.g. Harry Potter</small>
+          </div>
+          <div class="form-group">
+            <label for="Title">With words in the title</label>
+            <input type="text" class="form-control" id="TitleWords" placeholder="Words in title">
+            <small class="form-text text-muted">E.g. The Lord rings</small>
+          </div>
+          <div class="form-group">
+            <label for="Title">Without the words in the title</label>
+            <input type="text" class="form-control" id="NoWordsTitle" placeholder="Without the words">
+            <small class="form-text text-muted">E.g. Wizard</small>
+          </div>
+          <div class="form-group">
+            <label for="Author">Book written by</label>
+            <input type="text" class="form-control" id="Author" placeholder="Author">
+            <small class="form-text text-muted">E.g. George Orwell</small>
+          </div>
+          <div class="form-group">
+            <label for="isbn">Book with isbn</label>
+            <input type="text" class="form-control" id="isbn" placeholder="isbn">
+            <small class="form-text text-muted">E.g. 0060920561</small>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio0" value="Books">
+            <label class="form-check-label" for="inlineRadio0">All content</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="Books">
+            <label class="form-check-label" for="inlineRadio1">Books</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="Magazines">
+            <label class="form-check-label" for="inlineRadio2">Magazines</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio3" value="Newspapers">
+            <label class="form-check-label" for="inlineRadio3">Newspapers</label>
+          </div>
+          <div class="form-group">
+            <label for="Language">Return books in language: </label>
+            <select class="custom-select">
+                <option selected value="">Any language</option><option value="lang_af">Afrikaans</option><option value="lang_ar">Arabic</option><option value="lang_hy">Armenian</option><option value="lang_be">Belarusian</option><option value="lang_bg">Bulgarian</option><option value="lang_ca">Catalan</option><option value="lang_zh-CN">Chinese&nbsp;(Simplified)</option><option value="lang_zh-TW">Chinese&nbsp;(Traditional)</option><option value="lang_hr">Croatian</option><option value="lang_cs">Czech</option><option value="lang_da">Danish</option><option value="lang_nl">Dutch</option><option value="lang_en">English</option><option value="lang_eo">Esperanto</option><option value="lang_et">Estonian</option><option value="lang_tl">Filipino</option><option value="lang_fi">Finnish</option><option value="lang_fr">French</option><option value="lang_de">German</option><option value="lang_el">Greek</option><option value="lang_iw">Hebrew</option><option value="lang_hi">Hindi</option><option value="lang_hu">Hungarian</option><option value="lang_is">Icelandic</option><option value="lang_id">Indonesian</option><option value="lang_it">Italian</option><option value="lang_ja">Japanese</option><option value="lang_ko">Korean</option><option value="lang_lv">Latvian</option><option value="lang_lt">Lithuanian</option><option value="lang_no">Norwegian</option><option value="lang_fa">Persian</option><option value="lang_pl">Polish</option><option value="lang_pt">Portuguese</option><option value="lang_ro">Romanian</option><option value="lang_ru">Russian</option><option value="lang_sr">Serbian</option><option value="lang_sk">Slovak</option><option value="lang_sl">Slovenian</option><option value="lang_es">Spanish</option><option value="lang_sw">Swahili</option><option value="lang_sv">Swedish</option><option value="lang_th">Thai</option><option value="lang_tr">Turkish</option><option value="lang_uk">Ukrainian</option><option value="lang_vi">Vietnamese</option>
+              </select>
+          </div>
+          <div class="register-button">
+            <input class="btn btn-primary btn-2 " type="submit" value="Search">
+            </div>
+    </form>
+
+    <div class="genre-name" style="display:none">
+        Results
+      </div>
+        <ul class="index-genre" id="Results" style="display:none">
+          <div class="arrow-right">
+            <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
+          </div>
+          <div class="arrow">
+            <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
+          </div>
+        </ul>
+
 {% endblock %}
