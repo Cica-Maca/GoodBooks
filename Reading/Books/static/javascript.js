@@ -181,10 +181,23 @@ document.onclick = e => {
   }
 }
 
+var advanced_url
+
 if(document.URL.includes("advanced")){
   let advancedSearch = document.getElementById('advanced-search-form')
   advancedSearch.addEventListener('submit', () => {
-    let url = AdvancedSearchUserQuery()
+    advanced_url = AdvancedSearchUserQuery()
+    let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
+    let genre = document.querySelector('.index-genre')
+    genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
+    genre.style.display = "flex"
+    let genre_name = document.querySelector('.genre-name')
+    genre_name.style.display = "block"
+    let arrowR = document.querySelector('.arrow-right')
+    let arrow = document.querySelector('.arrow')
+    genre.innerHTML = ""
+    genre.append(arrowR, arrow)
+    requestBooks(genre, maxVisibleItemsOnScreen)
   })
 
 }
@@ -499,9 +512,15 @@ function serviceError(error, div){
 
 }
 
-function requestBooks(genre, loadItemsNumber, url)
+function requestBooks(genre, loadItemsNumber)
 {
-  url = url || `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
+  if(advanced_url){
+    url = advanced_url
+  }
+  else {
+    url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
+
+  }
   let visibleItems = Math.ceil(screen.width / 120 + 5)
   if (loadItemsNumber === visibleItems){
     url = url + `&maxResults=${visibleItems}`
@@ -601,7 +620,7 @@ function AdvancedSearchUserQuery() {
 
 
 
-  let url = `https://www.googleapis.com/books/v1/volumes?q=${wordsInTitle}${withoutWordsInTitle}${exactTitle}${isbn}${author}${content}${language}`
+  let url = `https://www.googleapis.com/books/v1/volumes?q=${withoutWordsInTitle}${wordsInTitle}${exactTitle}${isbn}${author}${content}${language}`
   console.log(url)
   return url
 
