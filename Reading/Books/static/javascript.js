@@ -181,6 +181,14 @@ document.onclick = e => {
   }
 }
 
+if(document.URL.includes("advanced")){
+  let advancedSearch = document.getElementById('advanced-search-form')
+  advancedSearch.addEventListener('submit', () => {
+    AdvancedSearchUserQuery()
+  })
+
+}
+
 
 
 
@@ -565,4 +573,20 @@ function AdvancedSearchLink() {
   link.textContent = "Advanced Search"
   link.href = "/Books/advanced"
   return link
+}
+
+function AdvancedSearchUserQuery() {
+  let exactTitle = document.getElementById('exactTitle').value
+  let wordsInTitle = document.getElementById('titleWords').value
+  let withoutWordsInTitle = document.getElementById('noWordsTitle').value
+  let author = document.getElementById('author').value
+  let isbn = document.getElementById('isbn').value
+  let content = document.querySelector('input[name="inlineRadioOptions"]:checked').value
+  let language = document.getElementById('language').value
+
+  let url = `https://www.googleapis.com/books/v1/volumes?q=intitle:"${exactTitle}"+isbn:${isbn}+inauthor:${author}&printType=${content}&langRestrict=${language}+${wordsInTitle}-${withoutWordsInTitle}`
+  console.log(url)
+  return url
+
+
 }
