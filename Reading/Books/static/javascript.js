@@ -184,7 +184,7 @@ document.onclick = e => {
 if(document.URL.includes("advanced")){
   let advancedSearch = document.getElementById('advanced-search-form')
   advancedSearch.addEventListener('submit', () => {
-    AdvancedSearchUserQuery()
+    let url = AdvancedSearchUserQuery()
   })
 
 }
@@ -499,15 +499,15 @@ function serviceError(error, div){
 
 }
 
-function requestBooks(genre, loadItemsNumber)
+function requestBooks(genre, loadItemsNumber, url)
 {
+  url = url || `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
   let visibleItems = Math.ceil(screen.width / 120 + 5)
-  let url
   if (loadItemsNumber === visibleItems){
-    url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=${visibleItems}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
+    url = url + `&maxResults=${visibleItems}`
   }
   else {
-    url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&maxResults=${visibleItems}&startIndex=${loadItemsNumber}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
+    url = url + `&maxResults=${visibleItems}&startIndex=${loadItemsNumber}` 
     genre.setAttribute('data-startIndex', loadItemsNumber)
   }
   if(loadItemsNumber < 200){ // 200 is max total items returned for genres
@@ -583,8 +583,25 @@ function AdvancedSearchUserQuery() {
   let isbn = document.getElementById('isbn').value
   let content = document.querySelector('input[name="inlineRadioOptions"]:checked').value
   let language = document.getElementById('language').value
+  
+  if (exactTitle)
+    exactTitle = `+intitle:${exactTitle}`
+  if (wordsInTitle)
+    wordsInTitle = `+${wordsInTitle}`
+  if (withoutWordsInTitle)
+    withoutWordsInTitle = `-${withoutWordsInTitle}`
+  if(author)
+    author = `+inauthor:${author}`
+  if(isbn)
+    isbn = `+isbn:${isbn}`
+  if(content)
+    content = `&printType=${content}`
+  if(language)
+    language = `&langRestrict=${language}`
 
-  let url = `https://www.googleapis.com/books/v1/volumes?q=intitle:"${exactTitle}"+isbn:${isbn}+inauthor:${author}&printType=${content}&langRestrict=${language}+${wordsInTitle}-${withoutWordsInTitle}`
+
+
+  let url = `https://www.googleapis.com/books/v1/volumes?q=${wordsInTitle}${withoutWordsInTitle}${exactTitle}${isbn}${author}${content}${language}`
   console.log(url)
   return url
 
