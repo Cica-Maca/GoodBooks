@@ -76,7 +76,7 @@ else {
 
 // Getting all divs with index-genre class and fetching books for every genre in divs by calling bookList() for every genre.
 document.querySelectorAll('.index-genre').forEach(genre =>{
-  if (genre.id !== "top-books-week" && genre.id !== "book-author"){
+  if (genre.id !== "top-books-week" && genre.id !== "book-author" && genre.id !== 'Results'){
     let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
     genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
 
@@ -518,7 +518,7 @@ function requestBooks(genre, loadItemsNumber)
     url = advanced_url
   }
   else {
-    url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
+    url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&printType=books&fields=totalItems,items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
 
   }
   let visibleItems = Math.ceil(screen.width / 120 + 5)
@@ -536,7 +536,13 @@ function requestBooks(genre, loadItemsNumber)
       return response.json()
     })
       .then(items => {
-        bookList(items, genre)
+        if(items.totalItems > 0)
+        {
+          bookList(items, genre)
+        }
+        else {
+          serviceError("No Results", genre)
+        }
         }).catch(error => {
           serviceError(error, genre)
         })
