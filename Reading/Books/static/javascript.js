@@ -240,7 +240,7 @@ function authorBooks(authors, title){
 
       }
     ).catch(error => {
-      serviceError(error, author)
+      serviceError(error)
     })
   })
   
@@ -476,7 +476,7 @@ function searchQuotes(search, page){
           })
 
         }).catch(error => {
-          serviceError("No results", document.querySelector('.body'))
+          serviceError("No results")
 })
 }
 
@@ -499,15 +499,17 @@ function PopularQuotes(page){
       }
     })
   }).catch(error => {
-    serviceError("Service unavailable", document.querySelector('.body'))
+    serviceError("Service unavailable")
   })
 }
 
-function serviceError(error, div){
+function serviceError(error){
   errorMessage = document.createElement('p')
   errorMessage.textContent = error
-  errorMessage.className = 'error-message'
-  div.append(errorMessage)
+  let div = document.getElementById('error-place') // Bootstrap code for showing error cards
+  let errorHTML = `<div class="alert alert-danger alert-dismissible fade show" style="display:flex;justify-content:center;" role="alert"><strong style="padding-right:5px">Error </strong>${error}<button type="button" class="close" style="border:none;background-color:transparent;" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>`
+
+  div.innerHTML = errorHTML
 
 
 }
@@ -541,10 +543,10 @@ function requestBooks(genre, loadItemsNumber)
           bookList(items, genre)
         }
         else {
-          serviceError("No Results", genre)
+          serviceError("No Results")
         }
         }).catch(error => {
-          serviceError(error, genre)
+          serviceError(error)
         })
     }
 }
