@@ -35,22 +35,22 @@ def register(request):
         confirm = request.POST["password-repeat"]
         if not (username and password and email and genres and confirm):
             return render(request, "Books/register.html", {
-                "message": "Invalid inputs."
+                "error": "Invalid inputs."
             })
         if len(genres) < 3:
             return render(request, "Books/register.html", {
-                "message": "Please pick 3 favourite genres."
+                "error": "Please pick 3 favourite genres."
             })
         if password != confirm: 
             return render(request, "Books/register.html", {
-                "message": "Passwords do not match!"
+                "error": "Passwords do not match!"
             })
         try:
             user = User.objects.create_user(username, email, password, genres=genres)
             user.save()
         except IntegrityError:
             return render(request, "Books/register.html", {
-                "message": "Username already taken."
+                "error": "Username already taken."
             })
         login(request, user)
         return HttpResponseRedirect(reverse("index"))

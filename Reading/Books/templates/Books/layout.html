@@ -71,6 +71,14 @@
       </nav>
       <div id="error-place">
       </div>
+      {% if error %}
+      <div class="alert alert-danger alert-dismissible fade show" style="display:flex;justify-content: center;" role="alert">
+        <strong style="padding-right:5px;">Error!</strong>{{ error }}
+        <button type="button" class="close" style="border:none;background-color:transparent;" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      {% endif %}
       <div class="body">
         {% block body %}
         {% endblock %}
