@@ -576,10 +576,15 @@ function displaySearchResults(book) {
   author.style.fontSize = "14px"
   title.style.fontSize = "15px"
 
-  image.src = book.volumeInfo.imageLinks.thumbnail
-  author.textContent = book.volumeInfo.authors[0]
-  title.textContent = book.volumeInfo.title
-  link.href = `/Books/show/${book.id}`
+  try {
+    image.src = book.volumeInfo.imageLinks.thumbnail
+    author.textContent = book.volumeInfo.authors[0]
+    title.textContent = book.volumeInfo.title
+    link.href = `/Books/show/${book.id}`
+  }catch(error){
+    return false
+  }
+ 
 
   itemDetails.append(title, author)
   saerchItem.append(image, itemDetails)

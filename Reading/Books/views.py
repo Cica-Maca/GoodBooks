@@ -89,15 +89,10 @@ def book_page(request, isbn):
             book["author"] = book_data["items"][0]["volumeInfo"]["authors"][0]
 
         book["date"] = book_data["items"][0]["volumeInfo"]["publishedDate"]
-        try:
-            book["desc"] = book_data["items"][0]["volumeInfo"]["description"]
-        except:
-            book["desc"] = "No description"
+        book["desc"] = book_data["items"][0]["volumeInfo"]["description"] if "description" in book_data["items"][0]["volumeInfo"] else "No description"
         book["page_count"] = book_data["items"][0]["volumeInfo"]["pageCount"]
-        try:
-            book["rating"] = book_data["items"][0]["volumeInfo"]["averageRating"]
-        except:
-            book["rating"] = '0'
+            
+        book["rating"] = book_data["items"][0]["volumeInfo"]["averageRating"] if "averageRating" in book_data["items"][0]["volumeInfo"] else "0"
         book["image"] = book_data["items"][0]["volumeInfo"]["imageLinks"]["thumbnail"]
     else: # If not digit, isbn is then an id of a book.
         url = f"https://www.googleapis.com/books/v1/volumes/{isbn}"
@@ -109,15 +104,10 @@ def book_page(request, isbn):
         except:
             book["author"] = book_data["volumeInfo"]["authors"][0]
         book["date"] = book_data["volumeInfo"]["publishedDate"]
-        try:
-            book["desc"] = book_data["volumeInfo"]["description"]
-        except:
-            book["desc"] = "No description"
+        
+        book["desc"] = book_data["volumeInfo"]["description"] if "description" in book_data["volumeInfo"] else "No description"
         book["page_count"] = book_data["volumeInfo"]["pageCount"]
-        try:
-            book["rating"] = book_data["volumeInfo"]["averageRating"]
-        except:
-            book["rating"] = '0'
+        book["rating"] = book_data["volumeInfo"]["averageRating"] if "rating" in book_data["volumeInfo"] else '0'
         book["image"] = book_data["volumeInfo"]["imageLinks"]["thumbnail"]
 
     
