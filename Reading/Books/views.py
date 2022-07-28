@@ -157,7 +157,12 @@ def advanced_search(request):
 def profile(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse(index))
-    return render(request, "books/profile.html")
+    userBooks = user_book.objects.filter(user_id=request.user)
+    userBooksNumber = user_book.objects.filter(user_id=request.user, is_read=True).count()
+    return render(request, "books/profile.html", {
+        "Books": userBooks,
+        "BooksRead": userBooksNumber
+    })
 
 
 def top_books():

@@ -523,3 +523,51 @@
     color: white;
 }
 
+.profile-content {
+    display:flex;
+    justify-content: center;
+    font-size:24px;
+}
+.profile-inner {
+    display: block;
+}
+
+.books-progress-bar {
+    width: 100%;
+    border: solid 1px #382110;
+    border-radius:20px;
+    height: 20px;
+    padding-top: 20px;
+    padding:0
+}
+
+.books-progress {
+    background-color: #382110;
+    width: 20%;
+    height: 20px;
+    border-radius: 20px;
+}
+
+progress {
+    margin-top:10px;
+    width: 100%;
+    border-radius: 20px;
+    height:20px;
+    box-shadow: 6px 6px 6px rgba( 0, 0, 0, 0.2 );
+    text-align: center;
+}
+
+progress::-webkit-progress-bar {
+    background-color: rgb(255, 255, 255);
+
+    border-radius: 20px;
+  }
+
+progress::-webkit-progress-value { 
+    background-color: #382110;
+    border-radius: 20px;
+}
+
+progress:after {
+    content: attr(value)'%';
+  }

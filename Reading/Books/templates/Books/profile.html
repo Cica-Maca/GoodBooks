@@ -2,5 +2,12 @@
 {% load static %}
 
 {% block body %}
-
+    <div class="profile-content">
+        <div class="profile-inner">
+            <div class="profile-books">
+                <strong>{{user.username}}</strong><span>, You have read {{BooksRead}} of 20 books in 2022.</span>
+            </div> 
+            <progress max="100" value="20"></progress>
+        </div>
+    </div>
 {% endblock %}
