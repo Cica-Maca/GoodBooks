@@ -11,5 +11,6 @@ urlpatterns = [
     path("quotes", views.quotes, name="quotes"),
     path("toisbn/<str:title>", views.BookToLink, name="toisbn"),
     path("state", views.BookState, name="bookstate"),
-    path("advanced", views.advanced_search, name="advanced")
+    path("advanced", views.advanced_search, name="advanced"),
+    path("profile", views.profile, name="profile")
 ]

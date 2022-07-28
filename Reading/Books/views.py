@@ -154,6 +154,11 @@ def BookState(request):
 def advanced_search(request):
     return render(request, "books/advancedSearch.html")
 
+def profile(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse(index))
+    return render(request, "books/profile.html")
+
 
 def top_books():
     url = "https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=dJm5Qeq1IAZgEJ7j6YmBAPLWA23SrzdP"
