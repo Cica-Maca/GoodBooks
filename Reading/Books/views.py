@@ -64,7 +64,6 @@ def login_view(request):
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
         if user is None:
-            print("greska")
             return HttpResponseRedirect(reverse("index"))
         login(request, user)
         return HttpResponseRedirect(reverse("index"))

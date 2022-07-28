@@ -152,6 +152,8 @@ if(document.URL.includes("show"))
         if(result.status === 201 || result.status === 200){
           changeState(event.target.textContent)
         }
+      }).catch(error => {
+       serviceError(error)
       })
     })
   }) 
