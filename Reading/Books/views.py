@@ -161,7 +161,7 @@ def profile(request):
     userBooksNumber = user_book.objects.filter(user_id=request.user, is_read=True).count()
     return render(request, "books/profile.html", {
         "Books": userBooks,
-        "BooksRead": userBooksNumber,
+        "booksRead": userBooksNumber,
         "Percentage": userBooksNumber / 20 * 100
     })
 

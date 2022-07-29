@@ -526,7 +526,6 @@
 .profile-content {
     display:flex;
     justify-content: center;
-    font-size:24px;
 }
 .profile-inner {
     display: block;
@@ -565,4 +564,10 @@ progress::-webkit-progress-bar {
 progress::-webkit-progress-value { 
     background-color: #382110;
     border-radius: 20px;
+}
+
+.profile-books {
+    font-size:24px;
+    display:flex;
+    justify-content: center;
 }

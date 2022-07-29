@@ -47,7 +47,7 @@ if (!isMobile())
       
     })
     books.children[0].addEventListener('click', e => {
-      if (books.id !== "top-books-week" && books.id !== "book-author"){
+      if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks'){
         let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
         let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
         requestBooks(books, loadItemsNumber)
@@ -100,7 +100,17 @@ if (document.URL.includes('show')){
 if(document.URL.includes('profile')){
   window.addEventListener('resize', moveArrow)
   window.addEventListener('load', moveArrow)
-  
+  document.querySelectorAll('.content-book-hidden').forEach(book => {
+    isbn = book.id
+    book.remove()
+    fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`).then(response => {
+      if (!response.ok) return Promise.reject(response);
+    return response.json()
+    }).then(items => {
+      console.log(items)
+      bookList(items, document.querySelector('.index-genre'))
+    })
+  })
 }
 
 
