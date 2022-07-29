@@ -6,8 +6,25 @@
         <div class="profile-inner">
             <div class="profile-books">
                 <strong>{{user.username}}</strong><span>, You have read {{BooksRead}} of 20 books in 2022.</span>
+                <progress max="100" value="{{Percentage}}"></progress>
             </div> 
-            <progress max="100" value="20"></progress>
+            <div class="author-name">Your books</div>
+            <div class="content-book">
+                <div hidden class="content-book-hidden" id="{{book.author}}"></div>
+                <ul class="index-genre" style="width:857px" id="readBooks">
+                    {% for book in booksRead %}
+                    <div hidden class="content-book-hidden" id="{{book.book_isbn}}"></div>
+                    {% endfor %}
+                    <div class="arrow-right">
+                        <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img"> 
+                      </div>
+                      <div class="arrow">
+                        <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
+                      </div>
+                </ul>
+        
+            </div>
         </div>
+        
     </div>
 {% endblock %}

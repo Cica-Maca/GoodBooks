@@ -554,7 +554,6 @@ progress {
     border-radius: 20px;
     height:20px;
     box-shadow: 6px 6px 6px rgba( 0, 0, 0, 0.2 );
-    text-align: center;
 }
 
 progress::-webkit-progress-bar {
@@ -567,7 +566,3 @@ progress::-webkit-progress-value {
     background-color: #382110;
     border-radius: 20px;
 }
-
-progress:after {
-    content: attr(value)'%';
-  }

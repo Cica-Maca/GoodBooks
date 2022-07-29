@@ -76,7 +76,7 @@ else {
 
 // Getting all divs with index-genre class and fetching books for every genre in divs by calling bookList() for every genre.
 document.querySelectorAll('.index-genre').forEach(genre =>{
-  if (genre.id !== "top-books-week" && genre.id !== "book-author" && genre.id !== 'Results'){
+  if (genre.id !== "top-books-week" && genre.id !== "book-author" && genre.id !== 'Results' && genre.id !== 'readBooks'){
     let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
     genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
 
@@ -96,6 +96,13 @@ if (document.URL.includes('show')){
   })
   }
 }
+
+if(document.URL.includes('profile')){
+  window.addEventListener('resize', moveArrow)
+  window.addEventListener('load', moveArrow)
+  
+}
+
 
 // Checking if the user is on book_page and if true call authorBooks()
 if (document.URL.includes('show')){
