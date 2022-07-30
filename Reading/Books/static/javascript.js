@@ -47,7 +47,7 @@ if (!isMobile())
       
     })
     books.children[0].addEventListener('click', e => {
-      if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks'){
+      if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks' && books.id !== 'reading' && books.id !== 'wantRead'){
         let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
         let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
         requestBooks(books, loadItemsNumber)
@@ -76,7 +76,7 @@ else {
 
 // Getting all divs with index-genre class and fetching books for every genre in divs by calling bookList() for every genre.
 document.querySelectorAll('.index-genre').forEach(genre =>{
-  if (genre.id !== "top-books-week" && genre.id !== "book-author" && genre.id !== 'Results' && genre.id !== 'readBooks'){
+  if (genre.id !== "top-books-week" && genre.id !== "book-author" && genre.id !== 'Results' && genre.id !== 'readBooks' && genre.id !== 'reading' && genre.id !== 'wantRead'){
     let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
     genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
 
@@ -98,19 +98,32 @@ if (document.URL.includes('show')){
 }
 
 if(document.URL.includes('profile')){
-  window.addEventListener('resize', moveArrow)
-  window.addEventListener('load', moveArrow)
   document.querySelectorAll('.content-book-hidden').forEach(book => {
     isbn = book.id
+    let url, wrongJson;
+    if (isNaN(isbn)){
+      wrongJson = true;
+      url = `https://www.googleapis.com/books/v1/volumes/${isbn}`
+    }else {
+      url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`
+    }
     book.remove()
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`).then(response => {
+    fetch(url).then(response => {
       if (!response.ok) return Promise.reject(response);
     return response.json()
     }).then(items => {
-      console.log(items)
+      if(wrongJson){
+        items = JSON.stringify(items)
+        items = `{"items":[${items}]}`
+        items = JSON.parse(items)
+      }
+      
       bookList(items, document.querySelector('.index-genre'))
+      moveArrow()
     })
   })
+  window.addEventListener('resize', moveArrow)
+  window.addEventListener('load', moveArrow)
 }
 
 

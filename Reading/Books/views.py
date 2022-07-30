@@ -158,11 +158,15 @@ def profile(request):
     if not request.user.is_authenticated:
         return HttpResponseRedirect(reverse(index))
     userBooks = user_book.objects.filter(user_id=request.user, is_read=True)
+    wantRead = user_book.objects.filter(user_id=request.user, to_read=True)
+    reading = user_book.objects.filter(user_id=request.user, is_reading=True)
     userBooksNumber = user_book.objects.filter(user_id=request.user, is_read=True).count()
     return render(request, "books/profile.html", {
         "Books": userBooks,
         "booksRead": userBooksNumber,
-        "Percentage": userBooksNumber / 20 * 100
+        "Percentage": userBooksNumber / 20 * 100,
+        "wantRead": wantRead,
+        "reading": reading
     })
 
 
