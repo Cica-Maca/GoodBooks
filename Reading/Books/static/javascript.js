@@ -100,6 +100,7 @@ if (document.URL.includes('show')){
 if(document.URL.includes('profile')){
   document.querySelectorAll('.content-book-hidden').forEach(book => {
     isbn = book.id
+    let div = book.parentElement
     let url, wrongJson;
     if (isNaN(isbn)){
       wrongJson = true;
@@ -118,8 +119,8 @@ if(document.URL.includes('profile')){
         items = JSON.parse(items)
       }
       
-      bookList(items, document.querySelector('.index-genre'))
-      moveArrow()
+      bookList(items, div)
+      moveArrow
     })
   })
   window.addEventListener('resize', moveArrow)
@@ -314,8 +315,6 @@ function showMore(text, state) {
 
 // Fetches 40 books by genre and and displays them in a list
 function bookList(items, genre, title){
-
-  genre = genre || document.querySelector('.index-genre');
   title = title || null
   let i = 0;
   items.items.every(item => {
