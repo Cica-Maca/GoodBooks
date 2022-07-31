@@ -37,6 +37,7 @@
               </div>
         </div>
         <div class="content-info">
+            <div id="book-id" hidden data-bookId="{{book.id}}" ></div>
             <h4 id="content-book-title">{{book.title}}</h4>
             <h6 id="content-book-author">by {% if book.more %} {{ book.author.0 }}, {{ book.author.1 }} {% else %} {{ book.author }} {% endif %}</h6>
             <div class="show-desc">

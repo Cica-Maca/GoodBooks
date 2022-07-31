@@ -174,7 +174,7 @@ if(document.URL.includes("show"))
         method: 'PUT',
         body: JSON.stringify({
           "bookState": event.target.textContent,
-          "isbn": window.location.href.split('/')[5].replace('#', ''),
+          "isbn": document.getElementById('book-id').dataset.bookid,
           "user": user
         }),
         headers: { "X-CSRFToken": csrftoken },
