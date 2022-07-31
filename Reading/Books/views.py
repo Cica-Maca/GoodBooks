@@ -77,6 +77,7 @@ def logout_view(request):
 
 def book_page(request, isbn):
     book = {}
+    book_id = ""
     if isbn.isdigit():
         url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
         book_data = requests.get(url=url).json()
@@ -86,7 +87,7 @@ def book_page(request, isbn):
             book["more"] = "True"
         except:
             book["author"] = book_data["items"][0]["volumeInfo"]["authors"][0]
-
+        book_id = book_data["items"][0]["id"]
         book["date"] = book_data["items"][0]["volumeInfo"]["publishedDate"]
         book["desc"] = book_data["items"][0]["volumeInfo"]["description"] if "description" in book_data["items"][0]["volumeInfo"] else "No description"
         book["page_count"] = book_data["items"][0]["volumeInfo"]["pageCount"]
@@ -97,6 +98,7 @@ def book_page(request, isbn):
         url = f"https://www.googleapis.com/books/v1/volumes/{isbn}"
         book_data = requests.get(url=url).json()
         book["title"] = book_data["volumeInfo"]["title"]
+        book_id = book_data["volumeInfo"]["industryIdentifiers"][0]["identifier"]
         try:
             book["author"] = [book_data["volumeInfo"]["authors"][0], book_data["volumeInfo"]["authors"][1]]
             book["more"] = "True"
@@ -109,7 +111,7 @@ def book_page(request, isbn):
         book["rating"] = book_data["volumeInfo"]["averageRating"] if "rating" in book_data["volumeInfo"] else '0'
         book["image"] = book_data["volumeInfo"]["imageLinks"]["thumbnail"]
 
-    
+    print(book_id)
     info_book_bool = False
     if request.user.is_authenticated:
         user = request.user
@@ -119,7 +121,17 @@ def book_page(request, isbn):
                 info_book_bool = "Read"
             elif users_book.to_read:
                 info_book_bool = "Want to read"
-            elif user_book.is_reading:
+            elif users_book.is_reading:
+                info_book_bool = "Currently reading"
+        except:
+            pass
+        try:
+            users_book = user_book.objects.get(user_id=user, book_isbn=book_id)
+            if users_book.is_read:
+                info_book_bool = "Read"
+            elif users_book.to_read:
+                info_book_bool = "Want to read"
+            elif users_book.is_reading:
                 info_book_bool = "Currently reading"
         except:
             pass
