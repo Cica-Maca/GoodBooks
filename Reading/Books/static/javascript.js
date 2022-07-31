@@ -97,7 +97,7 @@ if (document.URL.includes('show')){
   }
 }
 
-if(document.URL.includes('profile')){
+if(document.URL.includes('library')){
   document.querySelectorAll('.content-book-hidden').forEach(book => {
     isbn = book.id
     let div = book.parentElement
