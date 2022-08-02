@@ -31,6 +31,9 @@ def register(request):
         email = request.POST["email"]
         genres = request.POST.getlist("genres")
         confirm = request.POST["password-repeat"]
+        challenge = request.POST["reading-challenge"]
+        if not challenge:
+            challenge = 10
         if not (username and password and email and genres and confirm):
             return render(request, "Books/register.html", {
                 "error": "Invalid inputs."
@@ -44,7 +47,7 @@ def register(request):
                 "error": "Passwords do not match!"
             })
         try:
-            user = User.objects.create_user(username, email, password, genres=genres)
+            user = User.objects.create_user(username, email, password, genres=genres, reading_challenge=challenge)
             user.save()
         except IntegrityError:
             return render(request, "Books/register.html", {
