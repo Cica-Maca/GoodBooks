@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     genres = models.JSONField(default=list)
+    reading_challenge = models.IntegerField(default=10)
 
 class user_book(models.Model):
     user_id = models.ForeignKey(User, related_name="user", on_delete=models.CASCADE)

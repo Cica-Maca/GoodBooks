@@ -6,8 +6,16 @@
     <div class="content-wrap">
             <div class="profile-books">
                 <div>
-                <strong>{{user.username}}</strong><span>, You have read {{booksRead}} of 20 books in 2022.</span>
-                <progress max="100" value="{{Percentage}}"></progress>
+                {% if booksRead < 20 %}
+                  <strong>{{user.username}}</strong><span>, You have read {{booksRead}} out of {{user.reading_challenge}} books in 2022.</span>
+                  <progress max="100" value="{{Percentage}}"></progress>
+                {% elif booksRead == 0 %}
+                  <strong>{{user.username}}</strong><span>, You have read 0 out of {{user.reading_challenge}} books in 2022.</span>
+                  <progress max="100" value="0"></progress>
+                {% else %}
+                  <strong>{{user.username}}</strong><span>Congragulations, you have completed your challenge.</span>
+                  <progress max="100" value="100"></progress>
+                {% endif %}
                 </div>
             </div> 
             <div class="author-name">Your books</div>

@@ -12,13 +12,11 @@ from .models import User, user_book
 import requests
 import json
 
-# Create your views here.
 
 def index(request):
     genres = ["Fantasy", "Crime", "Romance", "Horror", "Biography"]
     if request.user.is_authenticated:
-        user = User.objects.get(username=request.user.username)
-        genres = user.genres
+        genres = request.user.genres
 
     Top_this_week = top_books()
     return render(request, "Books/index.html", {
@@ -167,6 +165,7 @@ def library(request):
     userBooks = user_book.objects.filter(user_id=request.user, is_read=True)
     wantRead = user_book.objects.filter(user_id=request.user, to_read=True)
     reading = user_book.objects.filter(user_id=request.user, is_reading=True)
+    readingChallenge = request.user.reading_challenge
     userBooksNumber = user_book.objects.filter(user_id=request.user, is_read=True).count()
     return render(request, "books/library.html", {
         "Books": userBooks,

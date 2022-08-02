@@ -101,7 +101,8 @@ if(document.URL.includes('library')){
   document.querySelectorAll('.content-book-hidden').forEach(book => {
     isbn = book.id
     let div = book.parentElement
-    let url, wrongJson;
+    let url
+    let wrongJson = false;
     if (isNaN(isbn)){
       wrongJson = true;
       url = `https://www.googleapis.com/books/v1/volumes/${isbn}`
@@ -109,10 +110,11 @@ if(document.URL.includes('library')){
       url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`
     }
     book.remove()
-    fetch(url).then(response => {
+    fetch(url)
+    .then(response => {
       if (!response.ok) return Promise.reject(response);
-    return response.json()
-    }).then(items => {
+    return response.json()})
+    .then(items => {
       if(wrongJson){
         items = JSON.stringify(items)
         items = `{"items":[${items}]}`
@@ -121,6 +123,9 @@ if(document.URL.includes('library')){
       
       bookList(items, div)
       moveArrow
+    })
+    .catch(error =>{
+      serviceError(error)
     })
   })
   window.addEventListener('resize', moveArrow)
@@ -665,7 +670,6 @@ function AdvancedSearchUserQuery() {
 
 
   let url = `https://www.googleapis.com/books/v1/volumes?q=${withoutWordsInTitle}${wordsInTitle}${exactTitle}${isbn}${author}${content}${language}`
-  console.log(url)
   return url
 
 
