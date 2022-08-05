@@ -240,6 +240,21 @@ if(document.URL.includes("advanced")){
 
 }
 
+if (document.URL.includes("profile")){
+  let genres = document.querySelector('.genres')
+  let genresPicked = genres.dataset.genres
+  genres = genres.children // getting all the genres
+  let genre, genreValue;
+  for (let i = 0; i < genres.length; i++){
+    genre = genres[i] // 1 child genre
+    genreValue = genre.children[1].innerHTML // Checking if genre is selected by user or not
+    if(genresPicked.includes(genreValue)){
+      genre.children[0].checked = true // Selecting input field
+    }
+  }
+  
+}
+
 
 
 
