@@ -19,7 +19,7 @@ def index(request):
     if request.user.is_authenticated:
         genres = request.user.genres
     if 'invalid_login' in request.session:
-        error = "You have entered your password or username incorrectly."
+        error = request.session['invalid_login']
         del request.session['invalid_login']
     Top_this_week = top_books()
     return render(request, "Books/index.html", {
@@ -164,6 +164,8 @@ def advanced_search(request):
     return render(request, "books/advancedSearch.html")
 
 def profile(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse(index))
     return render(request, "books/profile.html")
 
 def library(request):
