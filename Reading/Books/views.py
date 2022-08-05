@@ -15,13 +15,17 @@ import json
 
 def index(request):
     genres = ["Fantasy", "Crime", "Romance", "Horror", "Biography"]
+    error = ""
     if request.user.is_authenticated:
         genres = request.user.genres
-
+    if 'invalid_login' in request.session:
+        error = "You have entered your password or username incorrectly."
+        del request.session['invalid_login']
     Top_this_week = top_books()
     return render(request, "Books/index.html", {
         "top_books": Top_this_week,
-        "genres": genres
+        "genres": genres,
+        "error": error
     })
 
 def register(request):
@@ -65,6 +69,7 @@ def login_view(request):
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
         if user is None:
+            request.session['invalid_login'] = "You have entered your username or password incorrectly."
             return HttpResponseRedirect(reverse("index"))
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
@@ -114,7 +119,6 @@ def book_page(request, isbn):
         book["rating"] = book_data["volumeInfo"]["averageRating"] if "rating" in book_data["volumeInfo"] else '0'
         book["image"] = book_data["volumeInfo"]["imageLinks"]["thumbnail"]
 
-    print(book_id_or_isbn)
     info_book_bool = False
     if request.user.is_authenticated:
         user = request.user
