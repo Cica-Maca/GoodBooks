@@ -2,72 +2,103 @@
 {% load static %}
 
 {% block body %}
-<div class="content">
-    <div class="content-wrap">
-            <div class="profile-books">
-                <div>
-                <strong>{{user.username}}</strong><span>, You have read {{booksRead}} of 20 books in 2022.</span>
-                <progress max="100" value="{{Percentage}}"></progress>
-                </div>
-            </div> 
-            <div class="author-name">Your books</div>
-            <div class="content-book">
-                {% if Books %}
-                <ul class="index-genre" style="width:857px" id="readBooks">
-                    <div class="arrow-right">
-                        <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img"> 
-                      </div>
-                      <div class="arrow">
-                        <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
-                      </div>
-                    {% for book in Books %}
-                        <div hidden class="content-book-hidden" id="{{book.book_isbn}}"></div>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <div>You have not read any books</div>
-                {% endif %}
-                </div>
-                <div class="author-name">Books you want to read</div>
-                <div class="content-book">
-                {% if wantRead %}
-                <ul class="index-genre" style="width:857px" id="wantRead">
-                    <div class="arrow-right">
-                        <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img"> 
-                      </div>
-                      <div class="arrow">
-                        <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
-                      </div>
-                    {% for book in wantRead %}
-                        <div hidden class="content-book-hidden" id="{{book.book_isbn}}"></div>
-                    {% endfor %}
-                </ul>
-                {% else %}
-                <div>You don't have any books you want to read.</div>
-                {% endif %}
-                </div>
-                <div class="author-name">Currently reading</div>
-                <div class="content-book">
-                    {% if reading %}
-                    <ul class="index-genre" style="width:857px" id="reading">
-                        <div class="arrow-right">
-                            <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img"> 
-                          </div>
-                          <div class="arrow">
-                            <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
-                          </div>
-                        {% for book in reading %}
-                            <div hidden class="content-book-hidden" id="{{book.book_isbn}}"></div>
-                        {% endfor %}
-                    </ul>
-                    {% else %}
-                    <div>You're currently not reading any books</div>
-                    {% endif %}
-                </div>
-        
-            </div>
-        
-    
+<div style="display:flex; justify-content:center"><h6 style="width:50%">Change your account details:</h6></div>
+<form action="{% url 'register' %}" method="POST">
+  {% csrf_token %}
+  <div class="form-floating mb-3">
+    <input type="text" class="form-control field" name="username" value="{{user.username}}">
+    <label for="floatingInput" class="field">Change your username</label>
+  </div>
+  <div class="form-floating mb-3">
+    <input type="email" class="form-control field" name="email" value="{{user.email}}">
+    <label for="floatingInput" class="field">Change your email address</label>
+  </div>
+  <div class="form-floating mb-3">
+      <input type="password" class="form-control field" name="password" required>
+      <label for="floatingPassword" class="field">Input your current password</label>
+  </div>
+  <div class="form-floating mb-3">
+      <input type="password" class="form-control field" name="new-password">
+      <label for="floatingPassword" class="field">Input a new password if you want to change it</label>
+  </div>
+  <div class="form-floating mb-3">
+    <input type="number" class="form-control field" name="reading-challenge" value="{{user.reading_challenge}}">
+    <label for="floatingInput" class="field">Edit your reading challenge</label>
+  </div>
+  <label class="field mb-3">Pick your favourite genres: </label>
+  <div class="genres" data-genres="{{user.genres}}">
+  <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="Fantasy" name="genres">
+      <label class="form-check-label" for="inlineCheckbox1">Fantasy</label>
     </div>
-</div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="Mystery" name="genres">
+      <label class="form-check-label" for="inlineCheckbox2">Mystery</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="Crime" name="genres">
+      <label class="form-check-label" for="inlineCheckbox3">Crime</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="Romance" name="genres">
+      <label class="form-check-label" for="inlineCheckbox4">Romance</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="Thriller" name="genres">
+      <label class="form-check-label" for="inlineCheckbox5">Thriller</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="Self_Help" name="genres">
+      <label class="form-check-label" for="inlineCheckbox6">Self-Help</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox7" value="Science_fiction" name="genres">
+      <label class="form-check-label" for="inlineCheckbox7">Science Fiction</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox8" value="Religious" name="genres">
+      <label class="form-check-label" for="inlineCheckbox8">Religious</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox9" value="Historical" name="genres">
+      <label class="form-check-label" for="inlineCheckbox9">Historical</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox10" value="Western" name="genres">
+      <label class="form-check-label" for="inlineCheckbox10">Western</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox11" value="Dystopian" name="genres">
+      <label class="form-check-label" for="inlineCheckbox11">Dystopian</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox12" value="Manga" name="genres">
+      <label class="form-check-label" for="inlineCheckbox12">Manga</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox13" value="Nonfiction" name="genres">
+      <label class="form-check-label" for="inlineCheckbox13">Nonfiction</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox14" value="Philosophy" name="genres">
+      <label class="form-check-label" for="inlineCheckbox14">Philosophy</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox15" value="Poetry" name="genres">
+      <label class="form-check-label" for="inlineCheckbox15">Poetry</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="checkbox" id="inlineCheckbox16" value="Biography" name="genres">
+      <label class="form-check-label" for="inlineCheckbox16">Biography</label>
+    </div>
+  </div>
+  <div class="register-button">
+  <input class="btn btn-primary btn-2 " type="submit" value="Register">
+  </div>
+  {% if message %}
+    <div class="error-message">
+      {{ message }}
+    </div>
+  {% endif %}
+</form>
 {% endblock %}
