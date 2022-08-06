@@ -571,3 +571,26 @@ progress::-webkit-progress-value {
     display:flex;
     justify-content: center;
 }
+
+.content-comment-body {
+    display:flex;
+    justify-content: center;
+}
+
+.reviews-label {
+    padding-top: 50px;
+    padding-bottom: 10px;
+    font-family: "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 17px;
+    font-weight: bold;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
+}
+
+.comment-body {
+    background-color: #382110;
+    height: 200px;
+    width: 857px;
+    margin-bottom: 50px;
+}
