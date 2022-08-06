@@ -588,9 +588,28 @@ progress::-webkit-progress-value {
     justify-content: center;
 }
 
+.comments {
+    width: 857px;
+}
+
 .comment-body {
     background-color: #382110;
-    height: 200px;
-    width: 857px;
+    border-radius: 50px;
     margin-bottom: 50px;
+}
+
+.review-author {
+    padding-top:20px;
+    padding-left:20px;
+    color: white;
+}
+
+.review {
+    padding-left: 20px;
+    padding-right:20px;
+    padding-bottom: 20px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: 250;
+    line-height: 21px;
+    color:white;
 }

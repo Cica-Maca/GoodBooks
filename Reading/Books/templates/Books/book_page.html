@@ -94,9 +94,19 @@
     {% endif %}
         <div class="reviews-label">Reviews:</div>
         <div class="content-comment-body">
-            <div class="comments">
+            <div class="comments"   >
+                <div class="comment-body" style="background-color:white; border:1px solid #382110">
+                    <h6 class="review-author" style="color:black">Write your own review:</h6>
+                    <form action="{% url 'book_page' book.id %}" method="POST" style="display:flex;justify-content: center;">
+                        {% csrf_token %}
+                        <textarea style="width:80%;border:none;outline:none" name="review" rows="6" required></textarea>
+                        <input class="btn btn-primary btn-2" style="height:50%;align-self: end;margin-bottom:20px;" type="submit" value="Post">
+                    </form>
+                </div>
+
                 <div class="comment-body">
-                    <h6>fas read this book</h6>
+                    <h6 class="review-author">fas read this book:</h6>
+                    <p class="review">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
                 </div>
                 <div class="comment-body"></div>
                 <div class="comment-body"></div>
