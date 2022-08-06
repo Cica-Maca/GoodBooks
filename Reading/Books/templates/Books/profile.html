@@ -18,11 +18,7 @@
       <label for="floatingPassword" class="field">Input your current password</label>
   </div>
   <div class="form-floating mb-3">
-      <input type="password" class="form-control field" name="new-password">
-      <label for="floatingPassword" class="field">Input a new password if you want to change it</label>
-  </div>
-  <div class="form-floating mb-3">
-    <input type="number" class="form-control field" name="reading-challenge" value="{{user.reading_challenge}}">
+    <input type="number" class="form-control field" name="reading-challenge" value="{{user.reading_challenge}}" min="1" max="100">
     <label for="floatingInput" class="field">Edit your reading challenge</label>
   </div>
   <label class="field mb-3">Pick your favourite genres: </label>

@@ -9,6 +9,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_exempt
 from .models import User, user_book
+from django.contrib.auth.decorators import login_required
 import requests
 import json
 
@@ -163,14 +164,46 @@ def BookState(request):
 def advanced_search(request):
     return render(request, "books/advancedSearch.html")
 
-def profile(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse(index))
-    return render(request, "books/profile.html")
 
+@login_required
+def profile(request):
+    if request.method == "POST":
+        newUsername = request.POST["username"]
+        newEmail = request.POST["email"]
+        password = request.POST["password"]
+        readingChallenge = request.POST["reading-challenge"]
+        newGenres = request.POST.getlist("genres")
+        if not password:
+            request.session["view_error"] = "You must enter your current password to save changes made to the profile." 
+            return HttpResponseRedirect(reverse(profile))
+        if not newUsername:
+            request.session["view_error"] = "Username can not be empty." 
+            return HttpResponseRedirect(reverse(profile))
+        if not newEmail:
+            request.session["view_error"] = "Email can not be empty." 
+            return HttpResponseRedirect(reverse(profile))
+        if not readingChallenge or int(readingChallenge) < 1 or int(readingChallenge) > 100:
+            request.session["view_error"] = "Reading challenge must be in the range 1-100." 
+            return HttpResponseRedirect(reverse(profile))
+        auth = authenticate(request, username=request.user, password=password)
+        if not auth:
+            request.session["view_error"] = "Your password is incorrect." 
+            return HttpResponseRedirect(reverse(profile))
+        request.user.username = newUsername
+        request.user.email = newEmail
+        request.user.genres = newGenres
+        request.user.reading_challenge = readingChallenge
+        request.user.save()
+    error = ""
+    if 'view_error' in request.session:
+        error = request.session['view_error']
+        del request.session['view_error']
+    return render(request, "books/profile.html", {
+        "error": error
+    })
+
+@login_required
 def library(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse(index))
     userBooks = user_book.objects.filter(user_id=request.user, is_read=True)
     wantRead = user_book.objects.filter(user_id=request.user, to_read=True)
     reading = user_book.objects.filter(user_id=request.user, is_reading=True)
