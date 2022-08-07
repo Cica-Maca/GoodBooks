@@ -1,4 +1,5 @@
 from cmath import e
+from email.policy import HTTP
 from pydoc import resolve
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -8,7 +9,7 @@ from django.shortcuts import redirect, render, resolve_url
 from django.http import HttpResponse
 from django.db import IntegrityError
 from django.views.decorators.csrf import csrf_exempt
-from .models import User, user_book
+from .models import User, user_book, review
 from django.contrib.auth.decorators import login_required
 import requests
 import json
@@ -83,6 +84,16 @@ def logout_view(request):
     return HttpResponseRedirect(reverse('index'))
 
 def book_page(request, isbn):
+    if request.method == "POST":
+        userReview = request.POST["review"]
+        if not request.user:
+            return HttpResponseRedirect(resolve_url('book_page', isbn))
+        if not userReview:
+            return HttpResponseRedirect(resolve_url('book_page', isbn))
+        if review.objects.filter(user_id=request.user, book_id=book_id_or_isbn).exists():
+            return HttpResponseRedirect(resolve_url('book_page', isbn))
+        review(user_id=request.user, book_id=isbn, review=userReview).save()
+        return HttpResponseRedirect(resolve_url('book_page', isbn))
     book = {}
     book_id_or_isbn = ""
     if isbn.isdigit():
@@ -133,9 +144,19 @@ def book_page(request, isbn):
                 info_book_bool = "Currently reading"
         except:
             pass
+    
+    if request.user.is_authenticated and review.objects.filter(book_id=book_id_or_isbn, user_id=request.user).exists():
+        user_already_reviewed = review.objects.get(book_id=book_id_or_isbn, user_id=request.user)
+    else:
+        user_already_reviewed = False
+    reviews = review.objects.filter(book_id=book_id_or_isbn)
+    if request.user.is_authenticated:
+        reviews = reviews.exclude(user_id=request.user)
     return render(request, "books/book_page.html", {
         "book" : book,
-        "info_book": info_book_bool
+        "info_book": info_book_bool,
+        "reviews": reviews,
+        "user_already_reviewed": user_already_reviewed
     })
 
 def quotes(request):
