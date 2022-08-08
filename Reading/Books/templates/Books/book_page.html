@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block body %}
-{{ request.user.id|json_script:"user_id" }}
+{{ request.user.username|json_script:"user_id" }}
 <div class="content">
     <div class="content-wrap">
     <div class="content-book">
@@ -106,11 +106,11 @@
                 </div>
                 {% endif %}
                 {% if user_already_reviewed %}
-                <div class="comment-body" style="background-color: white;border:1px solid #382110;">
+                <div class="comment-body userReview" id="userReview">
                     <h6 class="review-author" style="color:black">You wrote review:</h6>
                     <p class="review" style="color:black">{{user_already_reviewed.review}}</p>
                     <div class="position-button">
-                        <input type="button" class="btn btn-primary btn-2" style="height:50%;align-self: start;margin-bottom:20px; width: 80px;margin-right:20px;" value="Delete"></input>
+                        <input type="button" id="deleteReview" class="btn btn-primary btn-2" style="height:50%;align-self: start;margin-bottom:20px; width: 80px;margin-right:20px;" value="Delete"></input>
                     </div>
                 </div>
                 {% endif %}

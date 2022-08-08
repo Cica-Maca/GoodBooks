@@ -593,9 +593,12 @@ progress::-webkit-progress-value {
 }
 
 .comment-body {
+    height: fit-content;
     background-color: #382110;
     border-radius: 50px;
     margin-bottom: 50px;
+    max-height: 500px;
+    transition: all .5s ease-in-out;
 }
 
 .review-author {
@@ -618,4 +621,17 @@ progress::-webkit-progress-value {
     display:flex;
     width: 100%;
     justify-content: end;
+}
+
+.userReview {
+    background-color: white;
+    border:1px solid #382110;
+}
+
+.hideDiv {
+    max-height: 0;
+    margin:0;
+    padding:0;
+    overflow:hidden;
+    transition: 1s;
 }

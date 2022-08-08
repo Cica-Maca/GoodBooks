@@ -140,6 +140,35 @@ if (document.URL.includes('show')){
   authorBooks(author_name, book_title)
   window.addEventListener('resize', moveArrow)
   window.addEventListener('load', moveArrow)
+
+
+  let deleteButton = document.querySelector('#deleteReview')
+  if (deleteButton){
+    deleteButton.addEventListener('click', () => {
+      let user = JSON.parse(document.getElementById('user_id').textContent)
+      let csrftoken = getCookie('csrftoken');
+      let bookId = document.getElementById('book-id').dataset.bookid
+      fetch(`/Books/show/${bookId}`, {
+        method: 'DELETE',
+        headers: { "X-CSRFToken": csrftoken },
+        body: JSON.stringify({
+          "user": user
+        })
+
+        
+      })
+      .then(response => response)
+      .then(result => {
+        if(result.status === 201 || result.status === 200){
+          let userReview = document.getElementById('userReview')
+          deletingAnimation(userReview)
+        }
+      })
+      .catch(error => {
+        serviceError(error)
+       })
+    })
+  }
 }
 
 if (document.URL.includes("quotes")){
@@ -686,6 +715,11 @@ function AdvancedSearchUserQuery() {
 
   let url = `https://www.googleapis.com/books/v1/volumes?q=${withoutWordsInTitle}${wordsInTitle}${exactTitle}${isbn}${author}${content}${language}`
   return url
+}
 
-
+function deletingAnimation(div) {
+  div.classList.toggle('hideDiv');
+  setTimeout(function(){ 
+    div.style.display = "none"
+  }, 1000)
 }

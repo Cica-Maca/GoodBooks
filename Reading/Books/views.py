@@ -94,6 +94,21 @@ def book_page(request, isbn):
             return HttpResponseRedirect(resolve_url('book_page', isbn))
         review(user_id=request.user, book_id=isbn, review=userReview).save()
         return HttpResponseRedirect(resolve_url('book_page', isbn))
+    if request.method == "DELETE":
+        if not request.user:
+            return JsonResponse({"message": "Error, not logged in."}, status=400)
+        data = json.loads(request.body)
+        userWhoWantsToDelete = data["user"]
+        if userWhoWantsToDelete == str(request.user):
+            try:
+                review.objects.get(user_id=request.user, book_id=isbn).delete()
+                return JsonResponse({"message": "Success"}, status=201)
+            except:
+                return JsonResponse({"message": "Error"}, status=400)
+        else:
+            return JsonResponse({"message": "Error"}, status=400)
+
+
     book = {}
     book_id_or_isbn = ""
     if isbn.isdigit():
