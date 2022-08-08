@@ -90,7 +90,7 @@ def book_page(request, isbn):
             return HttpResponseRedirect(resolve_url('book_page', isbn))
         if not userReview:
             return HttpResponseRedirect(resolve_url('book_page', isbn))
-        if review.objects.filter(user_id=request.user, book_id=book_id_or_isbn).exists():
+        if review.objects.filter(user_id=request.user, book_id=isbn).exists():
             return HttpResponseRedirect(resolve_url('book_page', isbn))
         review(user_id=request.user, book_id=isbn, review=userReview).save()
         return HttpResponseRedirect(resolve_url('book_page', isbn))

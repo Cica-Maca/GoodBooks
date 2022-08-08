@@ -106,9 +106,12 @@
                 </div>
                 {% endif %}
                 {% if user_already_reviewed %}
-                <div class="comment-body">
-                    <h6 class="review-author">You wrote review:</h6>
-                    <p class="review">{{user_already_reviewed.review}}</p>
+                <div class="comment-body" style="background-color: white;border:1px solid #382110;">
+                    <h6 class="review-author" style="color:black">You wrote review:</h6>
+                    <p class="review" style="color:black">{{user_already_reviewed.review}}</p>
+                    <div class="position-button">
+                        <input type="button" class="btn btn-primary btn-2" style="height:50%;align-self: start;margin-bottom:20px; width: 80px;margin-right:20px;" value="Delete"></input>
+                    </div>
                 </div>
                 {% endif %}
                 {% for review in reviews %}
