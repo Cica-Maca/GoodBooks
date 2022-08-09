@@ -161,7 +161,7 @@ if (document.URL.includes('show')){
       .then(result => {
         if(result.status === 201 || result.status === 200){
           let userReview = document.getElementById('userReview')
-          deletingAnimation(userReview)
+          hidingAnimation(userReview)
         }
       })
       .catch(error => {
@@ -216,6 +216,12 @@ if(document.URL.includes("show"))
       .then(result => {
         if(result.status === 201 || result.status === 200){
           changeState(event.target.textContent)
+          if(event.target.textContent == "Read"){
+            document.querySelector('#writeReview').classList.remove('hideDiv')
+          }
+          else {
+            document.querySelector('#writeReview').classList.add('hideDiv')
+          }
         }
       }).catch(error => {
        serviceError(error)
@@ -717,7 +723,7 @@ function AdvancedSearchUserQuery() {
   return url
 }
 
-function deletingAnimation(div) {
+function hidingAnimation(div) {
   div.classList.toggle('hideDiv');
   setTimeout(function(){ 
     div.style.display = "none"

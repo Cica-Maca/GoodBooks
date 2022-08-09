@@ -598,7 +598,7 @@ progress::-webkit-progress-value {
     border-radius: 50px;
     margin-bottom: 50px;
     max-height: 500px;
-    transition: all .5s ease-in-out;
+    transition: all 1s ease-in-out;
 }
 
 .review-author {
@@ -634,4 +634,5 @@ progress::-webkit-progress-value {
     padding:0;
     overflow:hidden;
     transition: 1s;
+    border-color: transparent !important
 }
