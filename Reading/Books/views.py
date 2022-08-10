@@ -108,14 +108,17 @@ def book_page(request, id):
     book = {} # Intializing a dict, used for storing book data.
     book_id_or_isbn = ""
 
-    """ top_books() function sends request to nytimes api to get the weekly top books, this api returns the id of the book"""
-    if id.isdigit():
-        url = f"https://www.googleapis.com/books/v1/volumes?q=id:{id}"
-        book_data = requests.get(url=url).json()
+    """ top_books() function sends request to nytimes api to get the weekly top books, this api returns the isbn of the book. 
+        Google books api returns different json data if using the isbn instead of the google books id of the book.
+        For this reason there is a check to determine if the id is isbn or an actual id.
+    """
+    if id.isdigit(): # Checking if the id is actually isbn
+        url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{id}" 
+        book_data = requests.get(url=url).json() # Requesting data in json
         book["title"] = book_data["items"][0]["volumeInfo"]["title"]
         try:
             book["author"] = [book_data["items"][0]["volumeInfo"]["authors"][0], book_data["items"][0]["volumeInfo"]["authors"][1]]
-            book["more"] = "True"
+            book["more"] = "True" # If there is more than 1 author
         except:
             book["author"] = book_data["items"][0]["volumeInfo"]["authors"][0]
         book_id_or_isbn = book_data["items"][0]["id"]
@@ -126,7 +129,7 @@ def book_page(request, id):
             
         book["rating"] = book_data["items"][0]["volumeInfo"]["averageRating"] if "averageRating" in book_data["items"][0]["volumeInfo"] else "0"
         book["image"] = book_data["items"][0]["volumeInfo"]["imageLinks"]["thumbnail"]
-    else: # If not digit, id is then an id of a book.
+    else: # Case if it is not an isbn
         book_id_or_isbn = id
         url = f"https://www.googleapis.com/books/v1/volumes/{id}"
         book_data = requests.get(url=url).json()
@@ -144,7 +147,7 @@ def book_page(request, id):
         book["rating"] = book_data["volumeInfo"]["averageRating"] if "rating" in book_data["volumeInfo"] else '0'
         book["image"] = book_data["volumeInfo"]["imageLinks"]["thumbnail"]
 
-    info_book_bool = False
+    info_book_bool = False # Used for checking if the user has set the book_state or not
     if request.user.is_authenticated:
         user = request.user
         try:
@@ -159,12 +162,13 @@ def book_page(request, id):
             pass
     
     if request.user.is_authenticated and review.objects.filter(book_id=book_id_or_isbn, user_id=request.user).exists():
+        # Checking if the user has already reviewed the book and if yes not displaying the form for submiting a new review on html.
         user_already_reviewed = review.objects.get(book_id=book_id_or_isbn, user_id=request.user)
     else:
         user_already_reviewed = False
-    reviews = review.objects.filter(book_id=book_id_or_isbn)
+    reviews = review.objects.filter(book_id=book_id_or_isbn) # Getting all the reviews for the book.
     if request.user.is_authenticated:
-        reviews = reviews.exclude(user_id=request.user)
+        reviews = reviews.exclude(user_id=request.user) # Excluding the review made by the user (if made).
     return render(request, "books/book_page.html", {
         "book" : book,
         "info_book": info_book_bool,
@@ -176,11 +180,11 @@ def book_page(request, id):
 def quotes(request):
     return render(request, "books/quotes.html")
 
-def BookToLink(request, title):
+def BookToLink(request, title): # Redirect from quotes. Used for getting the id of the book by searching for its title. Quotes page only has title of the volume.
     url = f"https://www.googleapis.com/books/v1/volumes?q={title}&printType=books"
     book_data = requests.get(url=url).json()
-    isbn = book_data["items"][0]["volumeInfo"]["industryIdentifiers"][0]["identifier"]
-    return HttpResponseRedirect(resolve_url('book_page', isbn))
+    id = book_data["items"][0]["id"]
+    return HttpResponseRedirect(resolve_url('book_page', id)) # Redirecting to book_page with the actual id of the book.
 
 def BookState(request):
     if request.method != "PUT":
