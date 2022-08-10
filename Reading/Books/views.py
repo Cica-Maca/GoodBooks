@@ -16,14 +16,11 @@ import json
 
 
 def index(request):
-    genres = ["Fantasy", "Crime", "Romance", "Horror", "Biography"]
-    error = ""
+    genres = ["Fantasy", "Crime", "Romance", "Horror", "Biography"] # Default genres if the user is not logged in.
     if request.user.is_authenticated:
-        genres = request.user.genres
-    if 'invalid_login' in request.session:
-        error = request.session['invalid_login']
-        del request.session['invalid_login']
-    Top_this_week = top_books()
+        genres = request.user.genres # Getting the genres the user selected
+    error = getError(request.session)
+    Top_this_week = top_books() # Calling top_books function which returns an array of dictionaries with info for every bestselling book this week.
     return render(request, "Books/index.html", {
         "top_books": Top_this_week,
         "genres": genres,
@@ -32,6 +29,7 @@ def index(request):
 
 def register(request):
     if request.method == "POST":
+        # Getting the POST data and checking if it is valid, if not display error message.
         username = request.POST["username"]
         password = request.POST["password"]
         email = request.POST["email"]
@@ -41,24 +39,20 @@ def register(request):
         if not challenge:
             challenge = 10
         if not (username and password and email and genres and confirm):
-            return render(request, "Books/register.html", {
-                "error": "Invalid inputs."
-            })
+            makeError(request.session, "Invalid inputs.")
+            return HttpResponseRedirect(reverse("register"))
         if len(genres) < 3:
-            return render(request, "Books/register.html", {
-                "error": "Please pick 3 favourite genres."
-            })
+            makeError(request.session, "Pick atleast 3 favourite genres.")
+            return HttpResponseRedirect(reverse("register"))
         if password != confirm: 
-            return render(request, "Books/register.html", {
-                "error": "Passwords do not match!"
-            })
+            makeError(request.session, "Passwords do not match!")
+            return HttpResponseRedirect(reverse("register"))
         try:
             user = User.objects.create_user(username, email, password, genres=genres, reading_challenge=challenge)
             user.save()
         except IntegrityError:
-            return render(request, "Books/register.html", {
-                "error": "Username already taken."
-            })
+            makeError(request.session, "Username already taken.")
+            return HttpResponseRedirect(reverse("register"))
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
         
@@ -71,7 +65,8 @@ def login_view(request):
         password = request.POST["password"]
         user = authenticate(request, username=username, password=password)
         if user is None:
-            request.session['invalid_login'] = "You have entered your username or password incorrectly."
+            # If the user with the entered info doesn't exist, redirect to index and display an error.
+            makeError(request.session, "You have entered your username or password incorrectly.")
             return HttpResponseRedirect(reverse("index"))
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
@@ -83,25 +78,26 @@ def logout_view(request):
     logout(request)
     return HttpResponseRedirect(reverse('index'))
 
-def book_page(request, isbn):
-    if request.method == "POST":
-        userReview = request.POST["review"]
-        if not request.user:
-            return HttpResponseRedirect(resolve_url('book_page', isbn))
-        if not userReview:
-            return HttpResponseRedirect(resolve_url('book_page', isbn))
-        if review.objects.filter(user_id=request.user, book_id=isbn).exists():
-            return HttpResponseRedirect(resolve_url('book_page', isbn))
-        review(user_id=request.user, book_id=isbn, review=userReview).save()
-        return HttpResponseRedirect(resolve_url('book_page', isbn))
-    if request.method == "DELETE":
-        if not request.user:
+def book_page(request, id):
+    if request.method == "POST": # POST method means the user wants to submit his own review to the book page.
+        userReview = request.POST["review"] # Getting the review input
+        if not request.user: # Checking if the user is logged in.
+            return HttpResponseRedirect(resolve_url('book_page', id))
+        if not userReview: # Checking if the review is empty or not.
+            return HttpResponseRedirect(resolve_url('book_page', id))
+        if review.objects.filter(user_id=request.user, book_id=id).exists(): # Checking if the user already reviewed the same book.
+            makeError(request.session, "You already have a review for that book.") # If yes redirect to book page and display an error.
+            return HttpResponseRedirect(resolve_url('book_page', id))
+        review(user_id=request.user, book_id=id, review=userReview).save() # If the review is valid, save into db and redirect.
+        return HttpResponseRedirect(resolve_url('book_page', id)) 
+    if request.method == "DELETE": # DELETE is used if the user wants to delete the review.
+        if not request.user: # Checking if the user is logged in.
             return JsonResponse({"message": "Error, not logged in."}, status=400)
-        data = json.loads(request.body)
-        userWhoWantsToDelete = data["user"]
-        if userWhoWantsToDelete == str(request.user):
+        data = json.loads(request.body) # Getting the json data from fetch.
+        userWhoWantsToDelete = data["user"] # Getting the user who is trying to delete the review.
+        if userWhoWantsToDelete == str(request.user): # Delete the review only if the user who sends the request is the same as the logged in user.
             try:
-                review.objects.get(user_id=request.user, book_id=isbn).delete()
+                review.objects.get(user_id=request.user, book_id=id).delete() # Getting the review and deleting it.
                 return JsonResponse({"message": "Success"}, status=201)
             except:
                 return JsonResponse({"message": "Error"}, status=400)
@@ -109,10 +105,12 @@ def book_page(request, isbn):
             return JsonResponse({"message": "Error"}, status=400)
 
 
-    book = {}
+    book = {} # Intializing a dict, used for storing book data.
     book_id_or_isbn = ""
-    if isbn.isdigit():
-        url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{isbn}"
+
+    """ top_books() function sends request to nytimes api to get the weekly top books, this api returns the id of the book"""
+    if id.isdigit():
+        url = f"https://www.googleapis.com/books/v1/volumes?q=id:{id}"
         book_data = requests.get(url=url).json()
         book["title"] = book_data["items"][0]["volumeInfo"]["title"]
         try:
@@ -128,12 +126,12 @@ def book_page(request, isbn):
             
         book["rating"] = book_data["items"][0]["volumeInfo"]["averageRating"] if "averageRating" in book_data["items"][0]["volumeInfo"] else "0"
         book["image"] = book_data["items"][0]["volumeInfo"]["imageLinks"]["thumbnail"]
-    else: # If not digit, isbn is then an id of a book.
-        book_id_or_isbn = isbn
-        url = f"https://www.googleapis.com/books/v1/volumes/{isbn}"
+    else: # If not digit, id is then an id of a book.
+        book_id_or_isbn = id
+        url = f"https://www.googleapis.com/books/v1/volumes/{id}"
         book_data = requests.get(url=url).json()
         book["title"] = book_data["volumeInfo"]["title"]
-        book["id"] = isbn
+        book["id"] = id
         try:
             book["author"] = [book_data["volumeInfo"]["authors"][0], book_data["volumeInfo"]["authors"][1]]
             book["more"] = "True"
@@ -171,7 +169,8 @@ def book_page(request, isbn):
         "book" : book,
         "info_book": info_book_bool,
         "reviews": reviews,
-        "user_already_reviewed": user_already_reviewed
+        "user_already_reviewed": user_already_reviewed,
+        "error": getError(request.session)
     })
 
 def quotes(request):
@@ -265,3 +264,14 @@ def top_books():
             isbn = data['results']['books'][i]['primary_isbn10']
         books.append({"title":data['results']['books'][i]['title'].lower().capitalize(), "isbn": isbn, "image": data['results']['books'][i]['book_image'], "desc": data['results']['books'][i]['description'], "author": data['results']['books'][i]['author']})
     return books
+
+def getError(session):
+    if 'error' in session:
+        error = session['error']
+        del session['error']
+        return error
+    return False
+
+def makeError(session, error):
+    session['error'] = error
+    return
