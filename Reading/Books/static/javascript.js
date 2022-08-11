@@ -86,14 +86,15 @@ document.querySelectorAll('.index-genre').forEach(genre =>{
   
 // Checking if there is show more div and if true call showMore()
 if (document.URL.includes('show')){
-  let show = document.querySelector('.show-desc')
-  if (show.clientHeight + show.clientWidth < 900){
+  let show = document.querySelector('.show-less')
+  console.log(show.scrollHeight + show.scrollWidth)
+  if (show.scrollHeight + show.scrollWidth < 900){
     document.querySelector('#show-more-desc').remove()
   }else {
-  let show_desc = document.querySelector('#show-more-desc')
-  show_desc.addEventListener('click', e => {
-    showMore(show, show_desc)
-  })
+    let show_desc = document.querySelector('#show-more-desc')
+    show_desc.addEventListener('click', e => {
+      showMore(show, show_desc)
+    })
   }
 }
 
@@ -102,24 +103,17 @@ if(document.URL.includes('library')){
     isbn = book.id
     let div = book.parentElement
     let url
-    let wrongJson = false;
-    if (isNaN(isbn)){
-      wrongJson = true;
-      url = `https://www.googleapis.com/books/v1/volumes/${isbn}`
-    }else {
-      url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`
-    }
+    url = `https://www.googleapis.com/books/v1/volumes/${isbn}`
     book.remove()
     fetch(url)
     .then(response => {
       if (!response.ok) return Promise.reject(response);
     return response.json()})
     .then(items => {
-      if(wrongJson){
-        items = JSON.stringify(items)
-        items = `{"items":[${items}]}`
-        items = JSON.parse(items)
-      }
+      
+      items = JSON.stringify(items)
+      items = `{"items":[${items}]}`
+      items = JSON.parse(items)
       
       bookList(items, div)
       moveArrow
@@ -212,7 +206,8 @@ if(document.URL.includes("show"))
           "user": user
         }),
         headers: { "X-CSRFToken": csrftoken },
-      }).then(response => response)
+      })
+      .then(response => response)
       .then(result => {
         if(result.status === 201 || result.status === 200){
           changeState(event.target.textContent)
@@ -223,8 +218,9 @@ if(document.URL.includes("show"))
             document.querySelector('#writeReview').classList.add('hideDiv')
           }
         }
-      }).catch(error => {
-       serviceError(error)
+      })
+      .catch(error => {
+        serviceError(error)
       })
     })
   }) 
@@ -360,10 +356,12 @@ function displayDivSize(div) {
 // Read More function
 function showMore(text, state) {
   if (state.innerHTML === "...more"){
-    text.style.webkitLineClamp = "1000"
+    text.classList.remove('show-less')
+    text.classList.add('show-more')
     state.innerHTML = "less..."
   }else{
-    text.style.webkitLineClamp = "10"
+    text.classList.remove('show-more')
+    text.classList.add('show-less')
     state.innerHTML = "...more"
   }
 }

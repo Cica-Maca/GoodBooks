@@ -190,7 +190,7 @@ def BookState(request):
     if request.method != "PUT":
         return HttpResponseRedirect(resolve_url('index'))
     data = json.loads(request.body)
-    if data['bookState'] == "Read":
+    if data['bookState'] == "Read": # Updating the db in correlation to the data that was sent by user. 
         user_book.objects.update_or_create(user_id=request.user, book_isbn=data['isbn'], defaults={'is_read':True, 'to_read':False, 'is_reading':False})
     elif data['bookState'] == "Want to read":
         user_book.objects.update_or_create(user_id=request.user, book_isbn=data['isbn'], defaults={'is_read':False, 'to_read':True, 'is_reading':False})
@@ -206,6 +206,7 @@ def advanced_search(request):
 
 @login_required
 def profile(request):
+    # Getting post data and updating the user model if form is valid.
     if request.method == "POST":
         newUsername = request.POST["username"]
         newEmail = request.POST["email"]
@@ -213,40 +214,35 @@ def profile(request):
         readingChallenge = request.POST["reading-challenge"]
         newGenres = request.POST.getlist("genres")
         if not password:
-            request.session["view_error"] = "You must enter your current password to save changes made to the profile." 
+            makeError(request.session, "You must enter your current password to save changes made to the profile.")
             return HttpResponseRedirect(reverse(profile))
         if not newUsername:
-            request.session["view_error"] = "Username can not be empty." 
+            makeError(request.session, "Username can not be empty.")
             return HttpResponseRedirect(reverse(profile))
         if not newEmail:
-            request.session["view_error"] = "Email can not be empty." 
+            makeError(request.session, "Email can not be empty.")
             return HttpResponseRedirect(reverse(profile))
         if not readingChallenge or int(readingChallenge) < 1 or int(readingChallenge) > 100:
-            request.session["view_error"] = "Reading challenge must be in the range 1-100." 
+            makeError(request.session, "Reading challenge must be in the range 1-100.")
             return HttpResponseRedirect(reverse(profile))
         auth = authenticate(request, username=request.user, password=password)
         if not auth:
-            request.session["view_error"] = "Your password is incorrect." 
+            makeError(request.session, "Your password is incorrect.")
             return HttpResponseRedirect(reverse(profile))
         request.user.username = newUsername
         request.user.email = newEmail
         request.user.genres = newGenres
         request.user.reading_challenge = readingChallenge
         request.user.save()
-    error = ""
-    if 'view_error' in request.session:
-        error = request.session['view_error']
-        del request.session['view_error']
     return render(request, "books/profile.html", {
-        "error": error
+        "error": getError(request.session)
     })
 
 @login_required
-def library(request):
+def library(request): # Displaying info about the user's books.
     userBooks = user_book.objects.filter(user_id=request.user, is_read=True)
     wantRead = user_book.objects.filter(user_id=request.user, to_read=True)
     reading = user_book.objects.filter(user_id=request.user, is_reading=True)
-    readingChallenge = request.user.reading_challenge
     userBooksNumber = user_book.objects.filter(user_id=request.user, is_read=True).count()
     return render(request, "books/library.html", {
         "Books": userBooks,
@@ -257,10 +253,11 @@ def library(request):
     })
 
 
-def top_books():
+def top_books(): # Sending request to nytimeapi to get the weekly top books.
     url = "https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=dJm5Qeq1IAZgEJ7j6YmBAPLWA23SrzdP"
     data = requests.get(url=url).json()
     books = []
+    # Sorting Json data into list of dictionaries so that it can be read in django template.
     for i in range(15):
         if data['results']['books'][i]['primary_isbn10'] == "None":
             isbn = data['results']['books'][i]['primary_isbn13']

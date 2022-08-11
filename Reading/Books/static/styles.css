@@ -279,14 +279,26 @@
     margin-left:20px;
 }
 
-.show-desc {
+.show-less {
     font-family: "Merriweather", "Georgia", serif;
     line-height: 21px;
     margin:0;
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 10;
+    max-height:210px;
     overflow: hidden;
+    transition: 1s;
+}
+
+.show-more {
+    font-family: "Merriweather", "Georgia", serif;
+    line-height: 21px;
+    margin:0;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    max-height: 2000px;
+    overflow: hidden;
+    transition: 1s;
 }
 
 .content-info-desc-hide {
