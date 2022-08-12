@@ -47,10 +47,18 @@ if (!isMobile())
       
     })
     books.children[0].addEventListener('click', e => {
-      if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks' && books.id !== 'reading' && books.id !== 'wantRead'){
+      let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
+      let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
+      if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks' && books.id !== 'reading' && books.id !== 'wantRead' && books.id !== "Results"){
+        requestBooks(books, loadItemsNumber)
+      }
+      if (books.id === "book-author"){
         let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
         let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
-        requestBooks(books, loadItemsNumber)
+      }
+      if (books.id === "Results"){
+        let advanced_url = AdvancedSearchUserQuery()
+        requestBooks(books, loadItemsNumber, advanced_url)
       }
       window.onresize = displayDivSize(books)
       window.onload = displayDivSize(books)
@@ -76,9 +84,9 @@ else {
 
 // Getting all divs with index-genre class and fetching books for every genre in divs by calling bookList() for every genre.
 document.querySelectorAll('.index-genre').forEach(genre =>{
+  let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
+  genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
   if (genre.id !== "top-books-week" && genre.id !== "book-author" && genre.id !== 'Results' && genre.id !== 'readBooks' && genre.id !== 'reading' && genre.id !== 'wantRead'){
-    let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
-    genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
 
     requestBooks(genre, maxVisibleItemsOnScreen)
     }
@@ -250,12 +258,12 @@ document.onclick = e => {
   }
 }
 
-var advanced_url
 
 if(document.URL.includes("advanced")){
   let advancedSearch = document.getElementById('advanced-search-form')
   advancedSearch.addEventListener('submit', () => {
-    advanced_url = AdvancedSearchUserQuery()
+    let advanced_url = AdvancedSearchUserQuery()
+    console.log(advanced_url)
     let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
     let genre = document.querySelector('.index-genre')
     genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
@@ -266,7 +274,7 @@ if(document.URL.includes("advanced")){
     let arrow = document.querySelector('.arrow')
     genre.innerHTML = ""
     genre.append(arrowR, arrow)
-    requestBooks(genre, maxVisibleItemsOnScreen)
+    requestBooks(genre, maxVisibleItemsOnScreen, advanced_url)
   })
 
 }
@@ -305,7 +313,7 @@ if (document.URL.includes("profile")){
 // Fetches books by author and displays them in a list on book page
 function authorBooks(authors, title){
   authors.forEach(function(author, i){
-    console.log(author)
+
     fetch(`https://www.googleapis.com/books/v1/volumes?q=inauthor:"${author.id}"&maxResults=40&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`).then(response => {
     if (!response.ok) return Promise.reject(response);
     return response.json()
@@ -598,15 +606,10 @@ function serviceError(error){
 
 }
 
-function requestBooks(genre, loadItemsNumber)
+function requestBooks(genre, loadItemsNumber, url)
 {
-  if(advanced_url){
-    url = advanced_url
-  }
-  else {
-    url = `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&printType=books&fields=totalItems,items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
+  url = url || `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&printType=books&fields=totalItems,items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
 
-  }
   let visibleItems = Math.ceil(screen.width / 120 + 5)
   if (loadItemsNumber === visibleItems){
     url = url + `&maxResults=${visibleItems}`
@@ -630,6 +633,7 @@ function requestBooks(genre, loadItemsNumber)
           serviceError("No Results")
         }
         }).catch(error => {
+          console.log(error)
           serviceError(error)
         })
     }
