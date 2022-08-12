@@ -53,8 +53,9 @@ if (!isMobile())
         requestBooks(books, loadItemsNumber)
       }
       if (books.id === "book-author"){
-        let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
-        let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
+        console.log(books.previousElementSibling.id)
+        const url = authorBooksUrl(books.previousElementSibling)
+        requestBooks(books, loadItemsNumber, url)
       }
       if (books.id === "Results"){
         let advanced_url = AdvancedSearchUserQuery()
@@ -139,7 +140,12 @@ if(document.URL.includes('library')){
 if (document.URL.includes('show')){
   let author_name = document.querySelectorAll('.content-book-hidden')
   let book_title = document.querySelector('#content-book-title').innerHTML
-  authorBooks(author_name, book_title)
+  author_name.forEach(function(author, i) {
+    let url = authorBooksUrl(author)
+    console.log(url)
+    let placeholderDiv = document.querySelectorAll('.index-genre')
+    requestBooks(placeholderDiv[i], placeholderDiv[i].dataset.startindex, url)
+  })
   window.addEventListener('resize', moveArrow)
   window.addEventListener('load', moveArrow)
 
@@ -311,31 +317,8 @@ if (document.URL.includes("profile")){
  
 
 // Fetches books by author and displays them in a list on book page
-function authorBooks(authors, title){
-  authors.forEach(function(author, i){
-
-    fetch(`https://www.googleapis.com/books/v1/volumes?q=inauthor:"${author.id}"&maxResults=40&printType=books&fields=items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`).then(response => {
-    if (!response.ok) return Promise.reject(response);
-    return response.json()
-  })
-    .then(items => {
-        if (items.totalItems !== 0)
-          bookList(items, document.querySelectorAll('.index-genre')[i], title);
-        else {
-           document.querySelector('.index-genre').remove()
-           document.querySelector('.author-name').remove()
-        }
-        if (!(document.querySelector('.index-genre').hasChildNodes())){
-          document.querySelector('.index-genre').remove()
-          document.querySelector('.author-name').remove()
-        }
-
-      }
-    ).catch(error => {
-      serviceError(error)
-    })
-  })
-  
+function authorBooksUrl(author){
+    return `https://www.googleapis.com/books/v1/volumes?q=inauthor:"${author.id}"&printType=books&fields=totalItems,items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
 }
 
 // Cutting the text on the 265 character.
@@ -621,6 +604,7 @@ function requestBooks(genre, loadItemsNumber, url)
   if(loadItemsNumber < 200){ // 200 is max total items returned for genres
     fetch(url)
     .then(response => {
+      console.log(url)
       if (!response.ok) return Promise.reject(response);
       return response.json()
     })
