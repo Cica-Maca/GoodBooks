@@ -356,73 +356,69 @@ function showMore(text, state) {
 // Fetches 40 books by genre and and displays them in a list
 function bookList(items, genre, title){
   title = title || null
-  let i = 0;
-  items.items.every(item => {
-    if (i > 30) return false
+  let item;
+  for (let i = 0; i < items.items.length; i++)
+  {
+    item = items.items[i];
     try {
-    var genre_inner = document.createElement("div");
-    var genre_inner_link = document.createElement("a")
-    var link_list_book = document.createElement("li")
-    var book_img = document.createElement("img")
-    var book_name = document.createElement("div")
-    var info_card = document.createElement("div")
-    var info_card_title = document.createElement("h6")
-    var info_card_author = document.createElement("div")
-    var info_card_desc = document.createElement("div")
+      var genre_inner = document.createElement("div");
+      var genre_inner_link = document.createElement("a")
+      var link_list_book = document.createElement("li")
+      var book_img = document.createElement("img")
+      var book_name = document.createElement("div")
+      var info_card = document.createElement("div")
+      var info_card_title = document.createElement("h6")
+      var info_card_author = document.createElement("div")
+      var info_card_desc = document.createElement("div")
 
 
-    genre_inner.className = `inner inner-genre`
+      genre_inner.className = `inner inner-genre`
 
-    genre_inner_link.className = "link-book"
-    genre_inner_link.href = '/Books/show/' + item.id
-    genre_inner_link.id = item.volumeInfo.industryIdentifiers[0].identifier
+      genre_inner_link.className = "link-book"
+      genre_inner_link.href = '/Books/show/' + item.id
+      genre_inner_link.id = item.volumeInfo.industryIdentifiers[0].identifier
 
-    link_list_book.className = "list-book"
+      link_list_book.className = "list-book"
 
-    book_img.className = "book-img"
-    book_img.src = item.volumeInfo.imageLinks.thumbnail
+      book_img.className = "book-img"
+      book_img.src = item.volumeInfo.imageLinks.thumbnail
 
-    book_name.className = "book-name"
-    book_name.textContent = item.volumeInfo.title
+      book_name.className = "book-name"
+      book_name.textContent = item.volumeInfo.title
 
-    info_card.className = "info-card"
+      info_card.className = "info-card"
 
-    info_card_title.className = "info-card-title"
-    info_card_title.textContent = item.volumeInfo.title
+      info_card_title.className = "info-card-title"
+      info_card_title.textContent = item.volumeInfo.title
 
-    info_card_author.className = "info-card-author"
-    if(item.volumeInfo.authors[1])
-    {
-      info_card_author.innerHTML = `by <h6 style="margin-left:3px;">${item.volumeInfo.authors[0]}, ${item.volumeInfo.authors[1]}</h6>`
-    }
-    else {
-      info_card_author.innerHTML = `by <h6 style="margin-left:3px;">${item.volumeInfo.authors[0]}</h6>`
-    }
+      info_card_author.className = "info-card-author"
+      if(item.volumeInfo.authors[1])
+      {
+        info_card_author.innerHTML = `by <h6 style="margin-left:3px;">${item.volumeInfo.authors[0]}, ${item.volumeInfo.authors[1]}</h6>`
+      }
+      else {
+        info_card_author.innerHTML = `by <h6 style="margin-left:3px;">${item.volumeInfo.authors[0]}</h6>`
+      }
 
-    
-    info_card_desc.className = "info-card-desc"
-    info_card_desc.textContent = item.volumeInfo.description
-    
-    info_card.append(info_card_title, info_card_author, info_card_desc)
-    link_list_book.append(book_img, book_name)
-    genre_inner_link.append(link_list_book)
-    genre_inner.append(genre_inner_link, info_card)
-    // genre_div.innerHTML = '<div class="{{ genre }}-inner inner-genre"><a href="" class="link-book" id=""><li class="list-book"><img class="book-img" src="Loading..."><div class="book-name"></div></li></a><div class="info-card"><h6 class="info-card-title"></h6><div class="info-card-author">by <h6 style="margin-left: 3px"></h6></div><div class="info-card-desc"></div></div></div>'
-    genre.append(genre_inner)
-    if(title === book_name.textContent){
-      genre_inner.remove()
-      i--
-    }
-    i++
-    return true;
-    }catch(error)
-    {
-      genre_inner.remove()
-      return true;
       
+      info_card_desc.className = "info-card-desc"
+      info_card_desc.textContent = item.volumeInfo.description
+      
+      info_card.append(info_card_title, info_card_author, info_card_desc)
+      link_list_book.append(book_img, book_name)
+      genre_inner_link.append(link_list_book)
+      genre_inner.append(genre_inner_link, info_card)
+      // genre_div.innerHTML = '<div class="{{ genre }}-inner inner-genre"><a href="" class="link-book" id=""><li class="list-book"><img class="book-img" src="Loading..."><div class="book-name"></div></li></a><div class="info-card"><h6 class="info-card-title"></h6><div class="info-card-author">by <h6 style="margin-left: 3px"></h6></div><div class="info-card-desc"></div></div></div>'
+      genre.append(genre_inner)
+      if(title === book_name.textContent){
+        genre_inner.remove()
+      }
     }
-
-  })
+    catch(error)
+      {
+          genre_inner.remove()      
+      }
+  }
 
 }
 
