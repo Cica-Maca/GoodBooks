@@ -112,7 +112,7 @@ def book_page(request, id):
         Google books api returns different json data if using the isbn instead of the google books id of the book.
         For this reason there is a check to determine if the id is isbn or an actual id.
     """
-    if id.isdigit(): # Checking if the id is actually isbn
+    if id.isdigit() or (id[:-1].isdigit() and id[-1] == "X"): # Checking if the id is isbn (Checking if it is a digit or if the last character is X and the rest of the chars are digits.)
         url = f"https://www.googleapis.com/books/v1/volumes?q=isbn:{id}" 
         book_data = requests.get(url=url).json() # Requesting data in json
         book["title"] = book_data["items"][0]["volumeInfo"]["title"]
