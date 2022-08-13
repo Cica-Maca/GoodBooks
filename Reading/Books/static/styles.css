@@ -474,6 +474,7 @@
     transform: translate3d(105px, 43px, 0px);
     z-index: 10000;
     list-style:none;
+    transition: 1s;
 }
 
 .search-results-item {

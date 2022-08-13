@@ -53,7 +53,6 @@ if (!isMobile())
         requestBooks(books, loadItemsNumber)
       }
       if (books.id === "book-author"){
-        console.log(books.previousElementSibling.id)
         const url = authorBooksUrl(books.previousElementSibling)
         requestBooks(books, loadItemsNumber, url)
       }
@@ -96,7 +95,6 @@ document.querySelectorAll('.index-genre').forEach(genre =>{
 // Checking if there is show more div and if true call showMore()
 if (document.URL.includes('show')){
   let show = document.querySelector('.show-less')
-  console.log(show.scrollHeight + show.scrollWidth)
   if (show.scrollHeight + show.scrollWidth < 900){
     document.querySelector('#show-more-desc').remove()
   }else {
@@ -142,7 +140,6 @@ if (document.URL.includes('show')){
   let book_title = document.querySelector('#content-book-title').innerHTML
   author_name.forEach(function(author, i) {
     let url = authorBooksUrl(author)
-    console.log(url)
     let placeholderDiv = document.querySelectorAll('.index-genre')
     requestBooks(placeholderDiv[i], Number(placeholderDiv[i].dataset.startindex), url)
   })
@@ -245,7 +242,7 @@ document.getElementById('search-books').addEventListener("submit", () => {
   let searchResultsDiv = document.querySelector('.search-results')
   searchBooks(search)
   .then(books => {
-    searchResultsDiv.style.display = "block"
+    searchResultsDiv.style.height = "1000px"
     searchResultsDiv.innerHTML = ""
     if (books.totalItems > 0){
       books.items.forEach(book => {
@@ -269,7 +266,6 @@ if(document.URL.includes("advanced")){
   let advancedSearch = document.getElementById('advanced-search-form')
   advancedSearch.addEventListener('submit', () => {
     let advanced_url = AdvancedSearchUserQuery()
-    console.log(advanced_url)
     let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
     let genre = document.querySelector('.index-genre')
     genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
@@ -616,7 +612,6 @@ function requestBooks(genre, loadItemsNumber, url)
     }
     })
   .catch(error => {
-    console.log(error)
     serviceError(error)
   })
 
@@ -667,7 +662,7 @@ function displaySearchResults(book) {
 }
 
 function HideSearchResults() {
-  document.querySelector('.search-results').style.display = "none"
+  document.querySelector('.search-results').style.height = "0px"
 }
 
 function AdvancedSearchLink() {
