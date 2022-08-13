@@ -144,7 +144,7 @@ if (document.URL.includes('show')){
     let url = authorBooksUrl(author)
     console.log(url)
     let placeholderDiv = document.querySelectorAll('.index-genre')
-    requestBooks(placeholderDiv[i], placeholderDiv[i].dataset.startindex, url)
+    requestBooks(placeholderDiv[i], Number(placeholderDiv[i].dataset.startindex), url)
   })
   window.addEventListener('resize', moveArrow)
   window.addEventListener('load', moveArrow)
@@ -601,26 +601,25 @@ function requestBooks(genre, loadItemsNumber, url)
     url = url + `&maxResults=${visibleItems}&startIndex=${loadItemsNumber}` 
     genre.setAttribute('data-startIndex', loadItemsNumber)
   }
-  if(loadItemsNumber < 200){ // 200 is max total items returned for genres
-    fetch(url)
-    .then(response => {
-      console.log(url)
-      if (!response.ok) return Promise.reject(response);
-      return response.json()
-    })
-      .then(items => {
-        if(items.totalItems > 0)
-        {
-          bookList(items, genre)
-        }
-        else {
-          serviceError("No Results")
-        }
-        }).catch(error => {
-          console.log(error)
-          serviceError(error)
-        })
+  fetch(url)
+  .then(response => {
+    if (!response.ok) return Promise.reject(response);
+    return response.json()
+  })
+  .then(items => {
+    if(items.totalItems > 0 && items.items)
+    {
+      bookList(items, genre)
     }
+    else if(items.totalItems === 0){
+      serviceError("No Results")
+    }
+    })
+  .catch(error => {
+    console.log(error)
+    serviceError(error)
+  })
+
 }
 
 async function searchBooks(search){
