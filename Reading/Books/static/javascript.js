@@ -57,7 +57,7 @@ if (!isMobile())
         requestBooks(books, loadItemsNumber, url)
       }
       if (books.id === "Results"){
-        let advanced_url = AdvancedSearchUserQuery()
+        const advanced_url = AdvancedSearchUserQuery()
         requestBooks(books, loadItemsNumber, advanced_url)
       }
       window.onresize = displayDivSize(books)
@@ -79,6 +79,27 @@ else {
   })
   document.querySelectorAll('.arrow-right').forEach(arrow => {
     arrow.remove()
+  })
+
+  document.querySelectorAll('.index-genre').forEach(books => {
+    books.addEventListener('scroll', () => {
+      if (books.offsetWidth + books.scrollLeft >= books.scrollWidth){
+        let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
+        let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
+        if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks' && books.id !== 'reading' && books.id !== 'wantRead' && books.id !== "Results"){
+          requestBooks(books, loadItemsNumber)
+        }
+        if (books.id === "book-author"){
+          const url = authorBooksUrl(books.previousElementSibling)
+          requestBooks(books, loadItemsNumber, url)
+        }
+        if (books.id === "Results"){
+          const advanced_url = AdvancedSearchUserQuery()
+          requestBooks(books, loadItemsNumber, advanced_url)
+        }
+      }
+    })
+    
   })
 }
 
@@ -357,7 +378,8 @@ function showMore(text, state) {
 function bookList(items, genre, title){
   title = title || null
   let item;
-  for (let i = 0; i < items.items.length; i++)
+  let numberOfItems = items.items.length;
+  for (let i = 0; i < numberOfItems; i++)
   {
     item = items.items[i];
     try {
