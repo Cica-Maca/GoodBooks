@@ -35,10 +35,7 @@ if (!isMobile())
 
     // Scrolling to right when clicking on the arrows inside index-genre
     // calling requestBooks for pagination
-    books.children[1].addEventListener('click', e => {    
-      window.onresize = displayDivSize(books)
-      window.onload = displayDivSize(books)
-  
+    books.children[1].addEventListener('click', () => {    
       books.scrollBy({
         top: 0,
         left: -screenWidth+150,
@@ -46,23 +43,7 @@ if (!isMobile())
       });
       
     })
-    books.children[0].addEventListener('click', e => {
-      let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
-      let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
-      if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks' && books.id !== 'reading' && books.id !== 'wantRead' && books.id !== "Results"){
-        requestBooks(books, loadItemsNumber)
-      }
-      if (books.id === "book-author"){
-        const url = authorBooksUrl(books.previousElementSibling)
-        requestBooks(books, loadItemsNumber, url)
-      }
-      if (books.id === "Results"){
-        const advanced_url = AdvancedSearchUserQuery()
-        requestBooks(books, loadItemsNumber, advanced_url)
-      }
-      window.onresize = displayDivSize(books)
-      window.onload = displayDivSize(books)
-  
+    books.children[0].addEventListener('click', () => {
       books.scrollBy({
         top: 0,
         left: screenWidth-150,
@@ -70,7 +51,23 @@ if (!isMobile())
       });
       
     })
-
+      books.addEventListener('scroll', () => {
+        if (books.offsetWidth + books.scrollLeft >= books.scrollWidth - 200){
+          let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
+          let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
+          if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks' && books.id !== 'reading' && books.id !== 'wantRead' && books.id !== "Results"){
+            requestBooks(books, loadItemsNumber)
+          }
+          if (books.id === "book-author"){
+            const url = authorBooksUrl(books.previousElementSibling)
+            requestBooks(books, loadItemsNumber, url)
+          }
+          if (books.id === "Results"){
+            const advanced_url = AdvancedSearchUserQuery()
+            requestBooks(books, loadItemsNumber, advanced_url)
+          }
+        }
+      })
   })
 }
 else {
@@ -79,27 +76,6 @@ else {
   })
   document.querySelectorAll('.arrow-right').forEach(arrow => {
     arrow.remove()
-  })
-
-  document.querySelectorAll('.index-genre').forEach(books => {
-    books.addEventListener('scroll', () => {
-      if (books.offsetWidth + books.scrollLeft >= books.scrollWidth){
-        let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
-        let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
-        if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks' && books.id !== 'reading' && books.id !== 'wantRead' && books.id !== "Results"){
-          requestBooks(books, loadItemsNumber)
-        }
-        if (books.id === "book-author"){
-          const url = authorBooksUrl(books.previousElementSibling)
-          requestBooks(books, loadItemsNumber, url)
-        }
-        if (books.id === "Results"){
-          const advanced_url = AdvancedSearchUserQuery()
-          requestBooks(books, loadItemsNumber, advanced_url)
-        }
-      }
-    })
-    
   })
 }
 
@@ -726,4 +702,8 @@ function hidingAnimation(div) {
   setTimeout(function(){ 
     div.style.display = "none"
   }, 1000)
+}
+
+function positionInfoCard(book){
+
 }
