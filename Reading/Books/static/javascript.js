@@ -21,7 +21,7 @@ var screenWidth;
       }
     })
     // Displaying info-card next to book div
-    if(!isMobile){
+    if(!isMobile()){
       books.addEventListener('mouseover', event => {
         let info;
         let book = event.target
