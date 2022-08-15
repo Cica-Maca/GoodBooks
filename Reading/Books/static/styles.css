@@ -471,7 +471,7 @@
     width: 276px;
     height: fit-content;
     background-color: white;
-    transform: translate3d(105px, 43px, 0px);
+    transform: translate3d(137px, 43px, 0px);
     z-index: 10000;
     list-style:none;
     transition: 1s;

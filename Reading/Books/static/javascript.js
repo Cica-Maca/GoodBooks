@@ -1,5 +1,4 @@
 // Horizontal scroll on index-genre
-var screenWidth;
 // Info-card positioning
   // Positioning info-card
   document.querySelectorAll('.index-genre').forEach(books => {
@@ -31,14 +30,11 @@ var screenWidth;
         }
         if (book.className === 'list-book')
         {
-    
-          window.onresize = displayWindowSize()
-          window.onload = displayWindowSize()
           rect = book.getBoundingClientRect()
           let pos = Math.round(rect.x)
           info = book.parentNode.nextElementSibling
           let width = book.offsetWidth;
-          if (pos + width + 300 > screenWidth) // 300 is the width of info-card
+          if (pos + width + 300 > window.innerWidth) // 300 is the width of info-card, Checking if the card will go out of window, if yes move it on the other side.
           {
             info.setAttribute('style', `left: ${pos-300}px;`)
           }
@@ -54,7 +50,7 @@ var screenWidth;
       books.children[1].addEventListener('click', () => {    
         books.scrollBy({
           top: 0,
-          left: -screenWidth+150,
+          left: - window.innerWidth + 150,
           behavior: 'smooth'
         });
         
@@ -62,7 +58,7 @@ var screenWidth;
       books.children[0].addEventListener('click', () => {
         books.scrollBy({
           top: 0,
-          left: screenWidth-150,
+          left: window.innerWidth - 150,
           behavior: 'smooth'
         })
       })
@@ -236,6 +232,10 @@ if(document.URL.includes("show"))
 document.getElementById('search-books').addEventListener("submit", () => {
   let search = document.getElementById('search-query').value
   let searchResultsDiv = document.querySelector('.search-results')
+  if (window.innerWidth < 990)
+  {
+    searchResultsDiv.style.transform = "translate3d(0px, 121px, 0px)"
+  }
   searchBooks(search)
   .then(books => {
     searchResultsDiv.style.height = "1000px"
