@@ -1,83 +1,82 @@
 // Horizontal scroll on index-genre
 var screenWidth;
 // Info-card positioning
-if (!isMobile())
-{
   // Positioning info-card
-  let info;
   document.querySelectorAll('.index-genre').forEach(books => {
+    books.addEventListener('scroll', () => {
+      if (books.offsetWidth + books.scrollLeft >= books.scrollWidth - 200){
+        let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
+        let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
+        if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks' && books.id !== 'reading' && books.id !== 'wantRead' && books.id !== "Results"){
+          requestBooks(books, loadItemsNumber)
+        }
+        if (books.id === "book-author"){
+          const url = authorBooksUrl(books.previousElementSibling)
+          requestBooks(books, loadItemsNumber, url)
+        }
+        if (books.id === "Results"){
+          const advanced_url = AdvancedSearchUserQuery()
+          requestBooks(books, loadItemsNumber, advanced_url)
+        }
+      }
+    })
     // Displaying info-card next to book div
-    books.addEventListener('mouseover', event => {
-      let book = event.target
-      if(book.className === 'book-img')
-      {
-        book = book.parentNode
-      }
-      if (book.className === 'list-book')
-      {
-  
-        window.onresize = displayWindowSize()
-        window.onload = displayWindowSize()
-        rect = book.getBoundingClientRect()
-        let pos = Math.round(rect.x)
-        info = book.parentNode.nextElementSibling
-        let width = book.offsetWidth;
-        if (pos + width + 300 > screenWidth) // 300 is the width of info-card
+    if(!isMobile){
+      books.addEventListener('mouseover', event => {
+        let info;
+        let book = event.target
+        if(book.className === 'book-img')
         {
-          info.setAttribute('style', `left: ${pos-300}px;`)
+          book = book.parentNode
         }
-        else {
-          info.setAttribute('style', `left: ${pos + width}px;`)
-        }
-        
-      }
-    })
-
-    // Scrolling to right when clicking on the arrows inside index-genre
-    // calling requestBooks for pagination
-    books.children[1].addEventListener('click', () => {    
-      books.scrollBy({
-        top: 0,
-        left: -screenWidth+150,
-        behavior: 'smooth'
-      });
-      
-    })
-    books.children[0].addEventListener('click', () => {
-      books.scrollBy({
-        top: 0,
-        left: screenWidth-150,
-        behavior: 'smooth'
-      });
-      
-    })
-      books.addEventListener('scroll', () => {
-        if (books.offsetWidth + books.scrollLeft >= books.scrollWidth - 200){
-          let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
-          let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
-          if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks' && books.id !== 'reading' && books.id !== 'wantRead' && books.id !== "Results"){
-            requestBooks(books, loadItemsNumber)
+        if (book.className === 'list-book')
+        {
+    
+          window.onresize = displayWindowSize()
+          window.onload = displayWindowSize()
+          rect = book.getBoundingClientRect()
+          let pos = Math.round(rect.x)
+          info = book.parentNode.nextElementSibling
+          let width = book.offsetWidth;
+          if (pos + width + 300 > screenWidth) // 300 is the width of info-card
+          {
+            info.setAttribute('style', `left: ${pos-300}px;`)
           }
-          if (books.id === "book-author"){
-            const url = authorBooksUrl(books.previousElementSibling)
-            requestBooks(books, loadItemsNumber, url)
+          else {
+            info.setAttribute('style', `left: ${pos + width}px;`)
           }
-          if (books.id === "Results"){
-            const advanced_url = AdvancedSearchUserQuery()
-            requestBooks(books, loadItemsNumber, advanced_url)
-          }
+          
         }
       })
+
+      // Scrolling to right when clicking on the arrows inside index-genre
+      // calling requestBooks for pagination
+      books.children[1].addEventListener('click', () => {    
+        books.scrollBy({
+          top: 0,
+          left: -screenWidth+150,
+          behavior: 'smooth'
+        });
+        
+      })
+      books.children[0].addEventListener('click', () => {
+        books.scrollBy({
+          top: 0,
+          left: screenWidth-150,
+          behavior: 'smooth'
+        })
+      })
+    }
+    else {
+      document.querySelectorAll('.arrow').forEach(arrow => {
+        arrow.remove()
+      })
+      document.querySelectorAll('.arrow-right').forEach(arrow => {
+        arrow.remove()
+      })
+    }
   })
-}
-else {
-  document.querySelectorAll('.arrow').forEach(arrow => {
-    arrow.remove()
-  })
-  document.querySelectorAll('.arrow-right').forEach(arrow => {
-    arrow.remove()
-  })
-}
+
 
 // Getting all divs with index-genre class and fetching books for every genre in divs by calling bookList() for every genre.
 document.querySelectorAll('.index-genre').forEach(genre =>{
