@@ -5,7 +5,7 @@
     books.addEventListener('scroll', () => {
       if (books.offsetWidth + books.scrollLeft >= books.scrollWidth - 200){
         let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
-        let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1
+        let loadItemsNumber = maxVisibleItemsOnScreen + Number(books.dataset.startindex) + 1 // Number of books that should be loaded.
         if (books.id !== "top-books-week" && books.id !== "book-author" && books.id!== 'readBooks' && books.id !== 'reading' && books.id !== 'wantRead' && books.id !== "Results"){
           requestBooks(books, loadItemsNumber)
         }
@@ -46,11 +46,10 @@
       })
 
       // Scrolling to right when clicking on the arrows inside index-genre
-      // calling requestBooks for pagination
       books.children[1].addEventListener('click', () => {    
         books.scrollBy({
           top: 0,
-          left: - window.innerWidth + 150,
+          left: - books.offsetWidth + 113, // Leaving the width of the last book
           behavior: 'smooth'
         });
         
@@ -58,12 +57,13 @@
       books.children[0].addEventListener('click', () => {
         books.scrollBy({
           top: 0,
-          left: window.innerWidth - 150,
+          left: books.offsetWidth - 113,
           behavior: 'smooth'
         })
       })
     }
     else {
+      // Removing the arrow navigation if the user is on mobile
       document.querySelectorAll('.arrow').forEach(arrow => {
         arrow.remove()
       })
@@ -97,6 +97,7 @@ if (document.URL.includes('show')){
   }
 }
 
+// Getting the book data and displaying it on library
 if(document.URL.includes('library')){
   document.querySelectorAll('.content-book-hidden').forEach(book => {
     isbn = book.id
@@ -126,19 +127,19 @@ if(document.URL.includes('library')){
 }
 
 
-// Checking if the user is on book_page and if true call authorBooks()
+// Checking if the user is on book_page, calling requestBooks for books from the same author
 if (document.URL.includes('show')){
-  let author_name = document.querySelectorAll('.content-book-hidden')
-  let book_title = document.querySelector('#content-book-title').innerHTML
+  const author_name = document.querySelectorAll('.content-book-hidden')
   author_name.forEach(function(author, i) {
     let url = authorBooksUrl(author)
-    let placeholderDiv = document.querySelectorAll('.index-genre')
-    requestBooks(placeholderDiv[i], Number(placeholderDiv[i].dataset.startindex), url)
+    const placeholderDiv = document.querySelectorAll('.index-genre')[i]
+    requestBooks(placeholderDiv, Number(placeholderDiv.dataset.startindex), url)
   })
   window.addEventListener('resize', moveArrow)
   window.addEventListener('load', moveArrow)
 
 
+  // Sending request to server when the user tries to delete his own review
   let deleteButton = document.querySelector('#deleteReview')
   if (deleteButton){
     deleteButton.addEventListener('click', () => {
@@ -158,7 +159,7 @@ if (document.URL.includes('show')){
       .then(result => {
         if(result.status === 201 || result.status === 200){
           let userReview = document.getElementById('userReview')
-          hidingAnimation(userReview)
+          hidingAnimation(userReview) // Animation of the review dissapearing
         }
       })
       .catch(error => {
@@ -169,14 +170,14 @@ if (document.URL.includes('show')){
 }
 
 if (document.URL.includes("quotes")){
-  PopularQuotes()
+  PopularQuotes() // Default quotes page loads Popular quotes
 
   let search = document.querySelector('.search-quotes')
   search.addEventListener('keypress', e => {
     if(e.key === "Enter")
     {
       document.querySelectorAll('.content-quote').forEach(quote => {
-        quote.remove()
+        quote.remove() // Removing the previous quotes and populating the page with the searched quotes.
       })
       searchQuotes(e.target.value)
     }
@@ -185,7 +186,7 @@ if (document.URL.includes("quotes")){
     tag.addEventListener('click', e =>{
       tagClicked = e.target.textContent
       document.querySelectorAll('.content-quote').forEach(quote => {
-        quote.remove()
+        quote.remove() // Removing the previous quotes and populating the page with quotes from selected tag.
       })
       searchQuotes(tagClicked)
       let currentTag = document.querySelector('.drp-title')
@@ -197,6 +198,7 @@ if (document.URL.includes("quotes")){
 
 if(document.URL.includes("show"))
 {
+  // Changing the state of the user's book trough PUT request to the server.
   let user = JSON.parse(document.getElementById('user_id').textContent)
   let csrftoken = getCookie('csrftoken');
   document.querySelectorAll('.dropdown-item').forEach(state => {
@@ -215,10 +217,10 @@ if(document.URL.includes("show"))
         if(result.status === 201 || result.status === 200){
           changeState(event.target.textContent)
           if(event.target.textContent == "Read"){
-            document.querySelector('#writeReview').classList.remove('hideDiv')
+            document.querySelector('#writeReview').classList.remove('hideDiv') // If the user has read the book, let him make a review of it.
           }
           else {
-            document.querySelector('#writeReview').classList.add('hideDiv')
+            document.querySelector('#writeReview').classList.add('hideDiv') // If the user removes the book from his list, hide the review form.
           }
         }
       })
@@ -229,21 +231,24 @@ if(document.URL.includes("show"))
   }) 
 }
 
+// Books search.
 document.getElementById('search-books').addEventListener("submit", () => {
-  let search = document.getElementById('search-query').value
-  let searchResultsDiv = document.querySelector('.search-results')
+  const search = document.getElementById('search-query').value
+  const searchResultsDiv = document.querySelector('.search-results')
   if (window.innerWidth < 990)
   {
-    searchResultsDiv.style.transform = "translate3d(0px, 121px, 0px)"
+    searchResultsDiv.style.transform = "translate3d(0px, 121px, 0px)" // Move the search results div on smaller screens
   }
-  searchBooks(search)
+  searchBooks(search) // Calling the searchBooks function which returns the list of books with the same title.
   .then(books => {
     searchResultsDiv.style.height = "1000px"
-    searchResultsDiv.innerHTML = ""
-    if (books.totalItems > 0){
-      books.items.forEach(book => {
+    searchResultsDiv.innerHTML = "" // Removing the previous search results.
+    const numberOfBooks = books.totalItems
+    if (numberOfBooks > 0){
+      for (let i = 0; i < books.totalItems; i++){
+        let book = books.items[i]
         displaySearchResults(book)
-      })
+      }
     }else {
       searchResultsDiv.textContent = "No results"
     }
@@ -253,7 +258,7 @@ document.getElementById('search-books').addEventListener("submit", () => {
 
 document.onclick = e => {
   if (e.target.className !== "search-results" && e.target.id !== "search-query"){
-    HideSearchResults()
+    HideSearchResults() // Hide search results if the user clicks from the search bar.
   }
 }
 
@@ -261,7 +266,7 @@ document.onclick = e => {
 if(document.URL.includes("advanced")){
   let advancedSearch = document.getElementById('advanced-search-form')
   advancedSearch.addEventListener('submit', () => {
-    let advanced_url = AdvancedSearchUserQuery()
+    let advanced_url = AdvancedSearchUserQuery() // Function gets user's inputs and combines it into a url.
     let maxVisibleItemsOnScreen = Math.ceil(screen.width / 120 + 5) // 120 is the width of list-book div, adding 5 in case there are faulty book items
     let genre = document.querySelector('.index-genre')
     genre.setAttribute('data-startIndex', maxVisibleItemsOnScreen)
@@ -270,7 +275,7 @@ if(document.URL.includes("advanced")){
     genre_name.style.display = "block"
     let arrowR = document.querySelector('.arrow-right')
     let arrow = document.querySelector('.arrow')
-    genre.innerHTML = ""
+    genre.innerHTML = "" // Removing the previous search results.
     genre.append(arrowR, arrow)
     requestBooks(genre, maxVisibleItemsOnScreen, advanced_url)
   })
@@ -326,16 +331,6 @@ function isMobile() {
   catch(e){ return false; }
 }
 
-// Getting the width of the window
-function displayWindowSize() {
-  screenWidth = window.innerWidth
-}
-
-// Getting the width of a div
-function displayDivSize(div) {
-  screenWidth = div.clientWidth
-}
-
 // Read More function
 function showMore(text, state) {
   if (state.innerHTML === "...more"){
@@ -349,7 +344,7 @@ function showMore(text, state) {
   }
 }
 
-// Fetches 40 books by genre and and displays them in a list
+// Displays the books in an index-genre div.
 function bookList(items, genre, title){
   title = title || null
   let item;
@@ -419,18 +414,19 @@ function bookList(items, genre, title){
 
 }
 
+// Positioning the right arrow on the screen at all times. 
 function moveArrow()
 {
-  
-    document.querySelectorAll('.index-genre').forEach(item => {
-      var rect = item.getBoundingClientRect();
-      document.querySelectorAll('.arrow-right').forEach(arrow => {
-        arrow.setAttribute('style', `left:${rect.right-27}px`)
-      })
+  document.querySelectorAll('.index-genre').forEach(item => {
+    var rect = item.getBoundingClientRect();
+    document.querySelectorAll('.arrow-right').forEach(arrow => {
+      arrow.setAttribute('style', `left:${rect.right-27}px`)
     })
+  })
 }
 
-function displayQuotes(quote){
+// Displaying the quote in a div alongside the author and a link to the book.
+function displayQuote(quote){
   let contentQuote = document.createElement('div')
   let divQuote = document.createElement('div')
   let quoteText = document.createElement('p')
@@ -478,6 +474,7 @@ function getCookie(name) {
   return cookieValue;
 }
 
+// Chaning the button of the book state.
 function changeState(state){
   let stateButton = document.querySelector('#book-state')
   if (state !== "Remove"){
@@ -496,6 +493,7 @@ function changeState(state){
   }
 }
 
+// Pagination for quteos, getting the current page and the max page.
 function createPagination(page, maxPage){
   let content = document.createElement('div')
   let spanPage = document.createElement('span')
@@ -527,7 +525,7 @@ function searchQuotes(search, page){
         return response.json()
       }).then(quotes => {
         quotes.quotes.forEach(quote => {
-          displayQuotes(quote)
+          displayQuote(quote)
           })
           createPagination(page, quotes.total_pages)
           document.querySelector('#pageInput').addEventListener('keypress', e => {
@@ -551,7 +549,7 @@ function PopularQuotes(page){
     return response.json()
   }).then(quotes => {
     quotes.quotes.forEach(quote => {
-      displayQuotes(quote)
+      displayQuote(quote)
     })
     createPagination(page, quotes.total_pages)
     document.querySelector('#pageInput').addEventListener('keypress', e => {
@@ -567,6 +565,7 @@ function PopularQuotes(page){
   })
 }
 
+// Displaying the error on the top of the page.
 function serviceError(error){
   errorMessage = document.createElement('p')
   errorMessage.textContent = error
@@ -574,10 +573,10 @@ function serviceError(error){
   let errorHTML = `<div class="alert alert-danger alert-dismissible fade show" style="display:flex;justify-content:center;" role="alert"><strong style="padding-right:5px">Error </strong>${error}<button type="button" class="close" style="border:none;background-color:transparent;" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>`
 
   div.innerHTML = errorHTML
-
-
 }
 
+// Gets the list of books from GoogleBooksAPI and then calls the bookList with the same items.
+// Loads only the amount of books that can fit on the users screen.
 function requestBooks(genre, loadItemsNumber, url)
 {
   url = url || `https://www.googleapis.com/books/v1/volumes?q=subject:${genre.id}&printType=books&fields=totalItems,items(id,%20volumeInfo/title,%20volumeInfo/authors,%20volumeInfo/publishedDate,%20volumeInfo/description,%20volumeInfo/industryIdentifiers/type,%20volumeInfo/pageCount,%20volumeInfo/imageLinks/thumbnail)`
@@ -588,7 +587,7 @@ function requestBooks(genre, loadItemsNumber, url)
   }
   else {
     url = url + `&maxResults=${visibleItems}&startIndex=${loadItemsNumber}` 
-    genre.setAttribute('data-startIndex', loadItemsNumber)
+    genre.setAttribute('data-startIndex', loadItemsNumber) // Saving the loaded books number for the next request.
   }
   fetch(url)
   .then(response => {
@@ -609,10 +608,10 @@ function requestBooks(genre, loadItemsNumber, url)
   })
 
 }
-
+// Returns the books with the same title.
 async function searchBooks(search){
   search = search.replace(' ', '%')
-  return fetch(`https://www.googleapis.com/books/v1/volumes?q=intitle:"${search}"&langRestrict=en`)
+  return fetch(`https://www.googleapis.com/books/v1/volumes?q=intitle:"${search}"&langRestrict=en&maxResults=10`)
     .then(response => {
       if (!response.ok) return Promise.reject(response);
       return response.json()
@@ -622,7 +621,7 @@ async function searchBooks(search){
       console.log(error)
     })
 }
-
+// Displaying search results in a div, 10 books max.
 function displaySearchResults(book) {
   let link = document.createElement('a')
   let saerchItem = document.createElement('div')
@@ -654,10 +653,12 @@ function displaySearchResults(book) {
   document.querySelector('.search-results').append(link)
 }
 
+// Hiding search div if the user click out of it.
 function HideSearchResults() {
   document.querySelector('.search-results').style.height = "0px"
 }
 
+// Advanced search link at the bottom of search books results div.
 function AdvancedSearchLink() {
   let link = document.createElement('a')
   link.className = "as"
@@ -666,6 +667,8 @@ function AdvancedSearchLink() {
   return link
 }
 
+
+// Returning the googlebooks search query with the user's inputs
 function AdvancedSearchUserQuery() {
   let exactTitle = document.getElementById('exactTitle').value
   let wordsInTitle = document.getElementById('titleWords').value
@@ -696,13 +699,10 @@ function AdvancedSearchUserQuery() {
   return url
 }
 
+// Hiding animation
 function hidingAnimation(div) {
   div.classList.toggle('hideDiv');
   setTimeout(function(){ 
     div.style.display = "none"
   }, 1000)
-}
-
-function positionInfoCard(book){
-
 }

@@ -108,7 +108,7 @@
 
 .book-img {
     height: 70%;
-    max-width: 120px;
+    width: 108px;
 }
 
 @media only screen and (min-width: 10000px) {
