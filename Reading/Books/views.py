@@ -13,6 +13,7 @@ from .models import User, user_book, review
 from django.contrib.auth.decorators import login_required
 import requests
 import json
+from config import *
 
 
 def index(request):
@@ -254,7 +255,7 @@ def library(request): # Displaying info about the user's books.
 
 
 def top_books(): # Sending request to nytimeapi to get the weekly top books.
-    url = "https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key=dJm5Qeq1IAZgEJ7j6YmBAPLWA23SrzdP"
+    url = f"https://api.nytimes.com/svc/books/v3/lists/current/combined-print-and-e-book-fiction.json?api-key={api_key}"
     data = requests.get(url=url).json()
     books = []
     # Sorting Json data into list of dictionaries so that it can be read in django template.
