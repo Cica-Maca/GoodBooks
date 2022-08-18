@@ -6,13 +6,13 @@
 
 {% block body %}
 
+{% if not noKey %}
 <div class="genre-name">
   Top books this week:
 </div>
 <div>
   {% if message %} <h6 style="color: #cc0000;"> {{ message }}</h6> {% endif %}
 </div>
-
 <ul class="index-genre" id="top-books-week">
   <div class="arrow-right">
     <img src="http://clipart-library.com/images_k/transparent-arrow-icon/transparent-arrow-icon-5.png" class="arrow-img">
@@ -35,6 +35,7 @@
     </div>
   {% endfor %}
 </ul>
+{% endif %}
 
 {% for genre in genres %}
 <div class="genre-name">
