@@ -6,7 +6,7 @@
     <div class="content-wrap">
             <div class="profile-books">
                 <div>
-                {% if booksRead < 20 %}
+                {% if booksRead < user.reading_challenge %}
                   <strong>{{user.username}}</strong><span>, You have read {{booksRead}} out of {{user.reading_challenge}} books in 2022.</span>
                   <progress max="100" value="{{Percentage}}"></progress>
                 {% elif booksRead == 0 %}

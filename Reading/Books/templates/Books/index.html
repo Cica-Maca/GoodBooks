@@ -30,7 +30,7 @@
       <div class="info-card-author">
         by <h6 style="margin-left: 3px">{{ book.author }}</h6>
       </div>
-      <div class="info-card-desc">{{ book.desc }}</div>
+      <div class="info-card-desc">{{ book.desc | safe}}</div>
       </div>
     </div>
   {% endfor %}

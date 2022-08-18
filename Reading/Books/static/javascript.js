@@ -394,7 +394,7 @@ function bookList(items, genre, title){
 
       
       info_card_desc.className = "info-card-desc"
-      info_card_desc.textContent = item.volumeInfo.description
+      info_card_desc.innerHTML = item.volumeInfo.description
       
       info_card.append(info_card_title, info_card_author, info_card_desc)
       link_list_book.append(book_img, book_name)
