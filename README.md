@@ -47,4 +47,5 @@ Like every project, this one can also be improved. Possible improvements:
 1. Check that you have Django installed
 2. Clone the repository
 3. Go to reading folder
-4. Run ``` python manage.py runserver ```
+4. Run ``` python manage.py migrate ``` 
+5. Run ``` python manage.py runserver ```
