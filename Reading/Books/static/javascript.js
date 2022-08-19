@@ -217,15 +217,15 @@ if(document.URL.includes("show"))
         if(result.status === 201 || result.status === 200){
           changeState(event.target.textContent)
           if(event.target.textContent == "Read"){
-            document.querySelector('#writeReview').classList.remove('hideDiv') // If the user has read the book, let him make a review of it.
+            document.querySelector('#writeReview').classList.toggle('hideDiv') // If the user has read the book, let him make a review of it.
           }
           else {
-            document.querySelector('#writeReview').classList.add('hideDiv') // If the user removes the book from his list, hide the review form.
+            hidingAnimation(document.getElementById('writeReview')) // If the user removes the book from his list, hide the review form.
           }
         }
       })
       .catch(error => {
-        serviceError(error)
+        console.log(error)
       })
     })
   }) 
@@ -701,8 +701,6 @@ function AdvancedSearchUserQuery() {
 
 // Hiding animation
 function hidingAnimation(div) {
-  div.classList.toggle('hideDiv');
-  setTimeout(function(){ 
-    div.style.display = "none"
-  }, 1000)
+  console.log(div)
+  div.classList.add('hideDiv');
 }
